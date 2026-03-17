@@ -72,27 +72,23 @@
   <script src="components.js"></script>
 
 <script>
-  const phoneSection = document.querySelector('.screen--mobile');
-  const screenImg = document.querySelector('.phone-screen img');
+  const phoneFrame = document.querySelector('.phone-frame');
+  const screenImg  = document.querySelector('.phone-screen img');
 
-  function updateScroll() {
-    const rect = phoneSection.getBoundingClientRect();
-    const windowH = window.innerHeight;
+  phoneFrame.addEventListener('mousemove', (e) => {
+    const rect     = phoneFrame.getBoundingClientRect();
+    const mouseY   = e.clientY - rect.top;          // px from top of frame
+    const progress = Math.min(Math.max(mouseY / rect.height, 0), 1);
 
-    // How far through the section have we scrolled (0 to 1)
-    const progress = Math.min(Math.max(
-      (windowH - rect.top) / (rect.height + windowH), 0
-    ), 1);
-
-    // Total scrollable distance inside the phone
-    const imgH = screenImg.naturalHeight;
-    const containerH = screenImg.parentElement.offsetHeight;
-    const maxScroll = imgH * (screenImg.offsetWidth / screenImg.naturalWidth) - containerH;
+    const imgH        = screenImg.naturalHeight;
+    const containerH  = screenImg.parentElement.offsetHeight;
+    const maxScroll   = (imgH * (screenImg.offsetWidth / screenImg.naturalWidth)) - containerH;
 
     if (maxScroll > 0) {
       screenImg.style.transform = `translateY(-${progress * maxScroll}px)`;
     }
-  }
+  });
+</script>
 
   window.addEventListener('scroll', updateScroll);
   window.addEventListener('resize', updateScroll);
