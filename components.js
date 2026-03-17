@@ -34,3 +34,65 @@ class SiteFooter extends HTMLElement {
 
 customElements.define('site-header', SiteHeader);
 customElements.define('site-footer', SiteFooter);
+
+// ── CURSOR ──────────────────────────────────────
+function initCursor() {
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+  `);
+
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+
+  let ringX = 0, ringY = 0;
+  let mouseX = 0, mouseY = 0;
+  const LERP = 0.12;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top  = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * LERP;
+    ringY += (mouseY - ringY) * LERP;
+    ring.style.left = ringX + 'px';
+    ring.style.top  = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const interactables = 'a, button, [role="button"], input, textarea, select, label, .card';
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest(interactables)) {
+      dot.classList.add('is-hovering');
+      ring.classList.add('is-hovering');
+    }
+  });
+
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest(interactables)) {
+      dot.classList.remove('is-hovering');
+      ring.classList.remove('is-hovering');
+    }
+  });
+
+  document.addEventListener('mousedown', () => ring.classList.add('is-clicking'));
+  document.addEventListener('mouseup',   () => ring.classList.remove('is-clicking'));
+
+  document.addEventListener('mouseleave', () => {
+    dot.classList.add('is-hidden');
+    ring.classList.add('is-hidden');
+  });
+
+  document.addEventListener('mouseenter', () => {
+    dot.classList.remove('is-hidden');
+    ring.classList.remove('is-hidden');
+  });
+}
+
+initCursor();
