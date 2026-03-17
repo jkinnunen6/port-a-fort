@@ -532,12 +532,10 @@ a.work-item {
   width: 100%;
   display: block;
   transform: translateY(0%);
-  transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
-.phone-frame:hover .phone-screen img {
-  transform: translateY(calc(-100% + 100vh - 10%));
-}
+
 
 /* ── ANIMATIONS ──────────────────────────────────────────── */
 
