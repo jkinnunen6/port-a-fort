@@ -7,6 +7,21 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  
+<!-- Password Protect-->
+<script>
+  const password = "yourpassword";
+  const entered = sessionStorage.getItem("auth");
+  if (entered !== password) {
+    const attempt = prompt("Enter password to continue:");
+    if (attempt !== password) {
+      document.body.innerHTML = "<p style='font-family:monospace;padding:40px'>Incorrect password.</p>";
+    } else {
+      sessionStorage.setItem("auth", password);
+    }
+  }
+</script>
+<!-- Password Protect-->
 
   <header>
     <a class="logo" href="index.html">
