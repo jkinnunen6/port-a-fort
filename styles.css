@@ -1,0 +1,400 @@
+/* ============================================================
+   styles.css — Shared styles for Work, Play, and Resume pages
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+:root {
+  --bg:      #F5F2ED;
+  --ink:     #1A1A18;
+  --accent:  #C8502A;
+  --muted:   #9A9587;
+  --border:  #D8D3CB;
+  --cursor-color: #1A1A18;
+  --dot-size:     8px;
+  --ring-size:    36px;
+  --ring-border:  1.5px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  cursor: none;
+}
+
+ /* ─── Cursor Elements ──────────────────────────── */
+* { cursor: none !important; }
+    /* Small dot — snaps instantly to mouse */
+    #cursor-dot {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--dot-size);
+      height: var(--dot-size);
+      background: var(--cursor-color);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      /* No transition — instant follow */
+      will-change: transform;
+    }
+
+    /* Larger ring — lags slightly behind */
+    #cursor-ring {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--ring-size);
+      height: var(--ring-size);
+      border: var(--ring-border) solid var(--cursor-color);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99998;
+      transform: translate(-50%, -50%);
+      transition:
+        width 0.25s ease,
+        height 0.25s ease,
+        border-color 0.25s ease,
+        opacity 0.25s ease,
+        background 0.25s ease;
+      will-change: transform;
+    }
+    /* ─── Cursor States ────────────────────────────── */
+
+    /* Hovering a link or button → ring expands & fills slightly */
+    #cursor-ring.is-hovering {
+      width: 52px;
+      height: 52px;
+      background: rgba(17,17,17,0.06);
+      border-color: var(--cursor-color);
+    }
+
+    /* Dot hides on hover (ring takes over) */
+    #cursor-dot.is-hovering {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    /* Clicking → ring shrinks */
+    #cursor-ring.is-clicking {
+      width: 22px;
+      height: 22px;
+      background: rgba(17,17,17,0.15);
+    }
+
+    /* Cursor hidden when leaving window */
+    #cursor-dot.is-hidden,
+    #cursor-ring.is-hidden {
+      opacity: 0;
+    }
+
+/* ── HEADER ──────────────────────────────────────────────── */
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 48px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+}
+
+.logo-mark svg {
+  width: 32px;
+  height: 32px;
+  fill: var(--bg);
+}
+
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+nav {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+  align-items: center;
+}
+
+nav a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+}
+
+nav a:hover {
+  color: var(--ink);
+}
+
+nav a.active {
+  color: var(--ink);
+}
+
+nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ── PAGE TITLE ──────────────────────────────────────────── */
+
+.page-title {
+  padding: 56px 48px 32px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.page-title h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.page-title span {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ── PLACEHOLDER IMAGE SHARED ────────────────────────────── */
+
+.work-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.work-thumb span {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.placeholder-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.placeholder-img svg {
+  width: 36px;
+  height: 36px;
+  opacity: 0.3;
+}
+
+.placeholder-img span {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── WORK PAGE GRID ──────────────────────────────────────── */
+
+.work-grid {
+  padding: 0 48px 80px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+.work-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--border);
+  animation: fadeUp 0.6s ease both;
+}
+
+.work-item::before {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
+
+.work-item:nth-child(1) .placeholder-img { background: #DDD8D0; }
+.work-item:nth-child(2) .placeholder-img { background: #D0D4D8; }
+.work-item:nth-child(3) .placeholder-img { background: #D4D0D8; }
+.work-item:nth-child(4) .placeholder-img { background: #D8D4D0; }
+.work-item:nth-child(5) .placeholder-img { background: #D0D8D4; }
+.work-item:nth-child(6) .placeholder-img { background: #D8D0D4; }
+
+.work-item:nth-child(1) { animation-delay: 0.05s; }
+.work-item:nth-child(2) { animation-delay: 0.10s; }
+.work-item:nth-child(3) { animation-delay: 0.15s; }
+.work-item:nth-child(4) { animation-delay: 0.20s; }
+.work-item:nth-child(5) { animation-delay: 0.25s; }
+.work-item:nth-child(6) { animation-delay: 0.30s; }
+
+.work-item .overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.work-item:hover .overlay { opacity: 0.55; }
+
+.overlay-label {
+  font-family: 'Playfair Display', serif;
+  color: var(--bg);
+  font-size: 1.1rem;
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  transform: translateY(8px);
+  transition: transform 0.35s;
+}
+
+.work-item:hover .overlay-label { transform: translateY(0); }
+
+/* ── PLAY PAGE COLLAGE ───────────────────────────────────── */
+
+.collage {
+  padding: 0 48px 80px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 80px;
+  gap: 2px;
+}
+
+.collage-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  animation: fadeUp 0.6s ease both;
+}
+
+/* Collage spanning rules — varied sizes for organic feel */
+.collage-item:nth-child(1)  { grid-column: span 5; grid-row: span 4; }
+.collage-item:nth-child(2)  { grid-column: span 7; grid-row: span 3; }
+.collage-item:nth-child(3)  { grid-column: span 4; grid-row: span 3; }
+.collage-item:nth-child(4)  { grid-column: span 3; grid-row: span 2; }
+.collage-item:nth-child(5)  { grid-column: span 7; grid-row: span 4; }
+.collage-item:nth-child(6)  { grid-column: span 5; grid-row: span 3; }
+.collage-item:nth-child(7)  { grid-column: span 4; grid-row: span 2; }
+.collage-item:nth-child(8)  { grid-column: span 3; grid-row: span 3; }
+.collage-item:nth-child(9)  { grid-column: span 5; grid-row: span 3; }
+
+.collage-item:nth-child(1) { animation-delay: 0.04s; }
+.collage-item:nth-child(2) { animation-delay: 0.08s; }
+.collage-item:nth-child(3) { animation-delay: 0.12s; }
+.collage-item:nth-child(4) { animation-delay: 0.16s; }
+.collage-item:nth-child(5) { animation-delay: 0.20s; }
+.collage-item:nth-child(6) { animation-delay: 0.24s; }
+.collage-item:nth-child(7) { animation-delay: 0.28s; }
+.collage-item:nth-child(8) { animation-delay: 0.32s; }
+.collage-item:nth-child(9) { animation-delay: 0.36s; }
+
+.collage-item:nth-child(odd)  .placeholder-img { background: #D8D4CE; }
+.collage-item:nth-child(even) .placeholder-img { background: #CECCD6; }
+.collage-item:nth-child(3n)   .placeholder-img { background: #CED6D2; }
+
+.collage-item:hover .placeholder-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  opacity: 0.25;
+  transition: opacity 0.3s;
+}
+
+/* ── ANIMATIONS ──────────────────────────────────────────── */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* ── Moon Falling ──────────────────────────────────────────── */
+   /*
+      .particle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 30px;
+      animation: fall 1s ease-in forwards;
+    }
+
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100px) rotate(30deg); opacity: 0; }
+    } 
+*/
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  header          { padding: 20px 24px; }
+  nav             { gap: 20px; }
+  .page-title     { padding: 36px 24px 20px; }
+  .work-grid      { padding: 0 24px 48px; }
+  .collage        { padding: 0 24px 48px; grid-template-columns: repeat(6, 1fr); }
+  .collage-item:nth-child(1) { grid-column: span 3; grid-row: span 3; }
+  .collage-item:nth-child(2) { grid-column: span 3; grid-row: span 2; }
+  .collage-item:nth-child(3) { grid-column: span 2; grid-row: span 2; }
+  .collage-item:nth-child(4) { grid-column: span 4; grid-row: span 2; }
+  .collage-item:nth-child(5) { grid-column: span 6; grid-row: span 3; }
+  .collage-item:nth-child(6) { grid-column: span 3; grid-row: span 2; }
+  .collage-item:nth-child(7) { grid-column: span 3; grid-row: span 2; }
+  .collage-item:nth-child(8) { grid-column: span 2; grid-row: span 3; }
+  .collage-item:nth-child(9) { grid-column: span 4; grid-row: span 3; }
+}
+
+@media (max-width: 480px) {
+  .work-grid { grid-template-columns: 1fr; }
+}

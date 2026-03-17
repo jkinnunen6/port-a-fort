@@ -1,0 +1,33 @@
+<!--
+  header.html — Reference template
+  ─────────────────────────────────────────────────────────────
+  The header is inlined directly in index.html and play.html.
+  To update the header across all pages, edit the <header>
+  block in each HTML file. Keep styles.css as the single
+  source of truth for all header/nav styling.
+  ─────────────────────────────────────────────────────────────
+
+  ACTIVE STATE: Add class="active" to the correct <a> tag
+  per page:
+    index.html  →  <a href="index.html" class="active">Work</a>
+    play.html   →  <a href="play.html"  class="active">Play</a>
+-->
+
+<header>
+  <a class="logo" href="index.html">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="8" height="8"/>
+        <rect x="13" y="3" width="8" height="8"/>
+        <rect x="3" y="13" width="8" height="8"/>
+        <circle cx="17" cy="17" r="4"/>
+      </svg>
+    </div>
+    <span class="logo-text">Your Name</span>
+  </a>
+  <nav>
+    <a href="index.html">Work</a>
+    <a href="play.html">Play</a>
+    <a href="resume.pdf" target="_blank">Resume</a>
+  </nav>
+</header>
