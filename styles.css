@@ -532,7 +532,7 @@ a.work-item {
   width: 100%;
   display: block;
   transform: translateY(0%);
-  will-change: transform;
+  /* no transition */
 }
 
 
