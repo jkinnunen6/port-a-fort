@@ -72,27 +72,21 @@
   <script src="components.js"></script>
 
 <script>
-  const phoneFrame = document.querySelector('.phone-frame');
-  const screenImg  = document.querySelector('.phone-screen img');
+  const phoneFrame  = document.querySelector('.phone-frame');
+  const screenImg   = document.querySelector('.phone-screen img');
 
-  phoneFrame.addEventListener('mousemove', (e) => {
-    const rect     = phoneFrame.getBoundingClientRect();
-    const mouseY   = e.clientY - rect.top;          // px from top of frame
-    const progress = Math.min(Math.max(mouseY / rect.height, 0), 1);
+  let currentScroll = 0;
 
-    const imgH        = screenImg.naturalHeight;
-    const containerH  = screenImg.parentElement.offsetHeight;
-    const maxScroll   = (imgH * (screenImg.offsetWidth / screenImg.naturalWidth)) - containerH;
+  phoneFrame.addEventListener('wheel', (e) => {
+    e.preventDefault(); // stop the page from scrolling while over the phone
 
-    if (maxScroll > 0) {
-      screenImg.style.transform = `translateY(-${progress * maxScroll}px)`;
-    }
-  });
-</script>
+    const imgH       = screenImg.naturalHeight;
+    const containerH = screenImg.parentElement.offsetHeight;
+    const maxScroll  = (imgH * (screenImg.offsetWidth / screenImg.naturalWidth)) - containerH;
 
-  window.addEventListener('scroll', updateScroll);
-  window.addEventListener('resize', updateScroll);
-  updateScroll();
+    currentScroll = Math.min(Math.max(currentScroll + e.deltaY, 0), maxScroll);
+    screenImg.style.transform = `translateY(-${currentScroll}px)`;
+  }, { passive: false });
 </script>
 
 </body>

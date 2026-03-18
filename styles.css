@@ -532,7 +532,7 @@ a.work-item {
   width: 100%;
   display: block;
   transform: translateY(0%);
-  /* no transition */
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 
