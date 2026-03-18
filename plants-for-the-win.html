@@ -31,7 +31,7 @@
       </div>
       <div class="meta-item">
         <span class="meta-label">Year</span>
-        <span class="meta-value">2024</span>
+        <span class="meta-value">2025</span>
       </div>
     </div>
     <div class="project-description">
@@ -54,7 +54,11 @@
   <div class="screen screen--mobile">
   <div class="phone-frame">
     <div class="phone-screen">
-      <img src="images/PFTW-mobile.png" alt="Plants For the Win mobile" />
+      <img src="images/PFTW-Header.png" alt="" />
+      <img src="images/PFTW-Hero.gif" alt="" />
+      <img src="images/PFTW-Body.png" alt="" />
+      <img src="images/PFTW-mobile-team.gif" alt="" />
+      <img src="images/PFTW-Footer.png" alt="" />
     </div>
     <img src="images/phonemock.png" alt="iPhone frame" class="phone-bezel" />
   </div>
@@ -73,19 +77,19 @@
 
 <script>
   const phoneFrame  = document.querySelector('.phone-frame');
-  const screenImg   = document.querySelector('.phone-screen img');
-
+  const phoneScreen = document.querySelector('.phone-screen');
   let currentScroll = 0;
 
   phoneFrame.addEventListener('wheel', (e) => {
-    e.preventDefault(); // stop the page from scrolling while over the phone
+    e.preventDefault();
 
-    const imgH       = screenImg.naturalHeight;
-    const containerH = screenImg.parentElement.offsetHeight;
-    const maxScroll  = (imgH * (screenImg.offsetWidth / screenImg.naturalWidth)) - containerH;
+    const containerH = phoneFrame.querySelector('.phone-bezel').offsetHeight * 0.91;
+    const totalH     = Array.from(phoneScreen.children)
+                         .reduce((sum, img) => sum + img.offsetHeight, 0);
+    const maxScroll  = totalH - containerH;
 
     currentScroll = Math.min(Math.max(currentScroll + e.deltaY, 0), maxScroll);
-    screenImg.style.transform = `translateY(-${currentScroll}px)`;
+    phoneScreen.style.transform = `translateY(-${currentScroll}px)`;
   }, { passive: false });
 </script>
 
