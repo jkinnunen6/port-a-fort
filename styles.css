@@ -559,7 +559,89 @@ a.work-item {
   flex-shrink: 0;
 }
 
+/* ── HERO ML4 ────────────────────────────────────────────── */
+.project-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('images/PFTW-herobackground.png');
+  background-size: cover;
+  background-position: center;
+}
 
+.ml4 {
+  position: relative;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  line-height: 1.2;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ml4 .letters {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(3);
+  opacity: 0;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+}
+
+.hero-sub {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-top: 12px;
+}
+
+/* ── HERO TEXT ───────────────────────────────────────────── */
+.project-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-text {
+  text-align: center;
+  padding: 0 24px;
+}
+
+.hero-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.hero-cycling {
+  display: inline-block;
+  color: var(--accent);
+  transition: opacity 0.4s ease;
+}
+
+.hero-cycling.fade-out {
+  opacity: 0;
+}
+
+.hero-sub {
+  margin-top: 12px;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 
 /* ── ANIMATIONS ──────────────────────────────────────────── */
 
