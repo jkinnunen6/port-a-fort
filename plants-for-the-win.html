@@ -85,7 +85,7 @@ let currentScroll = 0;
 phoneFrame.addEventListener('wheel', (e) => {
   e.preventDefault();
 
-  const containerH = phoneFrame.querySelector('.phone-bezel').offsetHeight * 0.91;
+  const containerH = document.querySelector('.phone-screen').offsetHeight;
   const totalH     = Array.from(phoneScreen.children)
                        .reduce((sum, img) => sum + img.offsetHeight, 0);
   const maxScroll  = totalH - containerH;
