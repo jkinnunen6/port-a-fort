@@ -11,18 +11,26 @@
   <site-header></site-header>
 
   <!-- HERO -->
-  <div class="project-hero">
-    <h1 class="ml4">
-      <span class="letters letters-1">BUILDING STRENGTH?</span>
-      <span class="letters letters-2">TRY A PED.*<br><span class="hero-sub">*Performance Enhancing Diet</span></span>
-      <span class="letters letters-3">WANT MORE ENERGY?</span>
-      <span class="letters letters-4">TRY A PED.*<br><span class="hero-sub">*Performance Enhancing Diet</span></span>
-      <span class="letters letters-5">WANT FASTER RECOVERY?</span>
-      <span class="letters letters-6">TRY A PED.*<br><span class="hero-sub">*Performance Enhancing Diet</span></span>
-      <span class="letters letters-7">WANT BETTER GAINS?</span>
-      <span class="letters letters-8">TRY A PED.*<br><span class="hero-sub">*Performance Enhancing Diet</span></span>
-    </h1>
-  </div>
+<div class="project-hero">
+  <h1 class="ml4">
+    <span class="letters letters-1"><span class="headline1">BUILDING STRENGTH?</span></span>
+    <span class="letters letters-2"><span class="headline1">TRY A PED.*</span><br>
+      <span class="copybelow">*Performance Enhancing Diet</span>
+    </span>
+    <span class="letters letters-3"><span class="headline1">WANT MORE ENERGY?</span></span>
+    <span class="letters letters-4"><span class="headline1">TRY A PED.*</span><br>
+      <span class="copybelow">*Performance Enhancing Diet</span>
+    </span>
+    <span class="letters letters-5"><span class="headline1">WANT FASTER RECOVERY?</span></span>
+    <span class="letters letters-6"><span class="headline1">TRY A PED.*</span><br>
+      <span class="copybelow">*Performance Enhancing Diet</span>
+    </span>
+    <span class="letters letters-7"><span class="headline1">WANT BETTER GAINS?</span></span>
+    <span class="letters letters-8"><span class="headline1">TRY A PED.*</span><br>
+      <span class="copybelow">*Performance Enhancing Diet</span>
+    </span>
+  </h1>
+</div>
 
   <!-- INTRO -->
   <section class="project-intro">
@@ -118,13 +126,13 @@
   const totalPerSlide = durationIn + hold + durationOut;
   const pairGap     = pause;
 
-  function resetAll() {
-    sequence.forEach(cls => {
-      const el = document.querySelector('.' + cls);
-      el.className = 'letters ' + cls;
-      el.style.opacity = 0;
-    });
-  }
+function resetAll() {
+  sequence.forEach(cls => {
+    const el = document.querySelector('.' + cls);
+    el.className = 'letters ' + cls;
+    el.style.opacity = '';  // clear inline style, don't set it to 0
+  });
+}
 
   function showSlide(index) {
     const cls = sequence[index];
@@ -138,9 +146,9 @@
       el.classList.remove('animate-in');
       el.classList.add('animate-out');
 
-      setTimeout(() => {
-        el.classList.remove('animate-out');
-        el.style.opacity = 0;
+setTimeout(() => {
+  el.classList.remove('animate-out');
+  el.style.opacity = '';  // was: el.style.opacity = 0;
 
         const next = index + 1;
 
