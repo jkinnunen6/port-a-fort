@@ -10,13 +10,50 @@ class SiteHeader extends HTMLElement {
           </div>
           <span class="logo-text">Your Name</span>
         </a>
-        <nav>
+        <nav class="desktop-nav">
           <a href="index.html" ${page === 'work' ? 'class="active"' : ''}>Work</a>
           <a href="play.html" ${page === 'play' ? 'class="active"' : ''}>Play</a>
           <a href="resume.pdf" target="_blank">Resume</a>
         </nav>
+        <button class="hamburger" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </header>
+
+      <div class="mobile-overlay">
+        <button class="overlay-close" aria-label="Close menu">✕</button>
+        <nav class="overlay-nav">
+          <a href="index.html" ${page === 'work' ? 'class="active"' : ''}>Work</a>
+          <a href="play.html" ${page === 'play' ? 'class="active"' : ''}>Play</a>
+          <a href="resume.pdf" target="_blank">Resume</a>
+        </nav>
+      </div>
     `;
+
+    // Toggle logic
+    const hamburger = this.querySelector('.hamburger');
+    const overlay   = this.querySelector('.mobile-overlay');
+    const close     = this.querySelector('.overlay-close');
+
+    hamburger.addEventListener('click', () => {
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    });
+
+    close.addEventListener('click', () => {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    });
+
+    // Close on nav link click
+    overlay.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        overlay.classList.remove('is-open');
+        document.body.style.overflow = '';
+      });
+    });
   }
 }
 

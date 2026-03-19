@@ -192,6 +192,87 @@ a.work-item {
   color: inherit;
 }
 
+/* ── HAMBURGER BUTTON ────────────────────────────────────── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 18px;
+  background: none;
+  border: none;
+  cursor: none;
+  padding: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* ── MOBILE OVERLAY ──────────────────────────────────────── */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.mobile-overlay.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.overlay-close {
+  position: absolute;
+  top: 28px;
+  right: 48px;
+  background: none;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 1.2rem;
+  color: var(--muted);
+  cursor: none;
+  transition: color 0.2s;
+}
+
+.overlay-close:hover { color: var(--ink); }
+
+.overlay-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+}
+
+.overlay-nav a {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  transition: color 0.2s;
+}
+
+.overlay-nav a:hover,
+.overlay-nav a.active { color: var(--accent); }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .desktop-nav { display: none; }
+  .hamburger   { display: flex; }
+}
+
 /* ── PAGE TITLE ──────────────────────────────────────────── */
 
 .page-title {
@@ -559,7 +640,7 @@ a.work-item {
   flex-shrink: 0;
 }
 
-/* ── HERO ML4 ────────────────────────────────────────────── */
+/* ── PFTW ────────────────────────────────────────────── */
 .project-hero {
   display: flex;
   align-items: center;
@@ -577,7 +658,7 @@ a.work-item {
 .ml4 {
   position: relative;
   font-weight: 900;
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: 3.5em;
   text-align: center;
   color: #fff;
   font-family: 'futura', serif;
@@ -625,6 +706,7 @@ a.work-item {
   font-size: 0.35em;
   line-height: 2em;
   display: block;
+  margin-left: -18px;
 }
 
 .ml4 .letters.animate-in {
