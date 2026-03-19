@@ -82,61 +82,86 @@
 
   <site-footer></site-footer>
   <script src="components.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
 
   <script>
-    // ── Phone scroll ─────────────────────────────
-    const phoneFrame  = document.querySelector('.phone-frame');
-    const phoneScreen = document.querySelector('.phone-screen-inner');
-    let currentScroll = 0;
+  // ── Phone scroll ─────────────────────────────
+  const phoneFrame  = document.querySelector('.phone-frame');
+  const phoneScreen = document.querySelector('.phone-screen-inner');
+  let currentScroll = 0;
 
-    phoneFrame.addEventListener('wheel', (e) => {
-      e.preventDefault();
+  phoneFrame.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const containerH = document.querySelector('.phone-screen').offsetHeight;
+    const totalH     = Array.from(phoneScreen.children)
+                         .reduce((sum, img) => sum + img.offsetHeight, 0);
+    const maxScroll  = totalH - containerH;
+    currentScroll = Math.min(Math.max(currentScroll + e.deltaY, 0), maxScroll);
+    phoneScreen.style.transform = `translateY(-${currentScroll}px)`;
+  }, { passive: false });
 
-      const containerH = document.querySelector('.phone-screen').offsetHeight;
-      const totalH     = Array.from(phoneScreen.children)
-                           .reduce((sum, img) => sum + img.offsetHeight, 0);
-      const maxScroll  = totalH - containerH;
+  // ── CSS-driven hero text ──────────────────────
+  const sequence = [
+    'letters-1',
+    'letters-2',
+    'letters-3',
+    'letters-4',
+    'letters-5',
+    'letters-6',
+    'letters-7',
+    'letters-8'
+  ];
 
-      currentScroll = Math.min(Math.max(currentScroll + e.deltaY, 0), maxScroll);
-      phoneScreen.style.transform = `translateY(-${currentScroll}px)`;
-    }, { passive: false });
+  const durationIn  = 800;
+  const durationOut = 600;
+  const hold        = 500;
+  const pause       = 600;
+  const totalPerSlide = durationIn + hold + durationOut;
+  const pairGap     = pause;
 
-    // ── Anime.js hero text ────────────────────────
-    var ml4 = {};
-    ml4.opacityIn   = [0, 1];
-    ml4.scaleIn     = [0.2, 1];
-    ml4.scaleOut    = 3;
-    ml4.durationIn  = 800;
-    ml4.durationOut = 600;
-    ml4.delay       = 500;
+  function resetAll() {
+    sequence.forEach(cls => {
+      const el = document.querySelector('.' + cls);
+      el.className = 'letters ' + cls;
+      el.style.opacity = 0;
+    });
+  }
 
-anime.timeline({ loop: true })
-  .add({ targets: '.ml4 .letters-1', opacity: ml4.opacityIn, scale: ml4.scaleIn, duration: ml4.durationIn })
-  .add({ targets: '.ml4 .letters-1', opacity: 0, scale: ml4.scaleOut, duration: ml4.durationOut, easing: 'easeInExpo', delay: ml4.delay })
-  .add({ targets: '.ml4 .letters-2', opacity: ml4.opacityIn, scale: ml4.scaleIn, duration: ml4.durationIn })
-  .add({ targets: '.ml4 .letters-2', opacity: 0, scale: ml4.scaleOut, duration: ml4.durationOut, easing: 'easeInExpo', delay: ml4.delay })
-  .add({ targets: '.ml4', opacity: 0, duration: 500, delay: 500 })
-  .add({ targets: '.ml4', opacity: 1, duration: 0 })
-  .add({ targets: '.ml4 .letters-3', opacity: ml4.opacityIn, scale: ml4.scaleIn, duration: ml4.durationIn })
-  .add({ targets: '.ml4 .letters-3', opacity: 0, scale: ml4.scaleOut, duration: ml4.durationOut, easing: 'easeInExpo', delay: ml4.delay })
-  .add({ targets: '.ml4 .letters-4', opacity: ml4.opacityIn, scale: ml4.scaleIn, duration: ml4.durationIn })
-  .add({ targets: '.ml4 .letters-4', opacity: 0, scale: ml4.scaleOut, duration: ml4.durationOut, easing: 'easeInExpo', delay: ml4.delay })
-  .add({ targets: '.ml4', opacity: 0, duration: 500, delay: 500 })
-  .add({ targets: '.ml4', opacity: 1, duration: 0 })
-  .add({ targets: '.ml4 .letters-5', opacity: ml4.opacityIn, scale: ml4.scaleIn, duration: ml4.durationIn })
-  .add({ targets: '.ml4 .letters-5', opacity: 0, scale: ml4.scaleOut, duration: ml4.durationOut, easing: 'easeInExpo', delay: ml4.delay })
-  .add({ targets: '.ml4 .letters-6', opacity: ml4.opacityIn, scale: ml4.scaleIn, duration: ml4.durationIn })
-  .add({ targets: '.ml4 .letters-6', opacity: 0, scale: ml4.scaleOut, duration: ml4.durationOut, easing: 'easeInExpo', delay: ml4.delay })
-  .add({ targets: '.ml4', opacity: 0, duration: 500, delay: 500 })
-  .add({ targets: '.ml4', opacity: 1, duration: 0 })
-  .add({ targets: '.ml4 .letters-7', opacity: ml4.opacityIn, scale: ml4.scaleIn, duration: ml4.durationIn })
-  .add({ targets: '.ml4 .letters-7', opacity: 0, scale: ml4.scaleOut, duration: ml4.durationOut, easing: 'easeInExpo', delay: ml4.delay })
-  .add({ targets: '.ml4 .letters-8', opacity: ml4.opacityIn, scale: ml4.scaleIn, duration: ml4.durationIn })
-  .add({ targets: '.ml4 .letters-8', opacity: 0, scale: ml4.scaleOut, duration: ml4.durationOut, easing: 'easeInExpo', delay: ml4.delay })
-  .add({ targets: '.ml4', opacity: 0, duration: 500, delay: 500 })
-  .add({ targets: '.ml4', opacity: 1, duration: 0 });
-  </script>
+  function showSlide(index) {
+    const cls = sequence[index];
+    const el  = document.querySelector('.' + cls);
+
+    el.style.opacity = '';
+    el.classList.add('animate-in');
+
+    setTimeout(() => {
+      el.classList.remove('animate-in');
+      el.classList.add('animate-out');
+
+      setTimeout(() => {
+        el.classList.remove('animate-out');
+        el.style.opacity = 0;
+
+        const next = index + 1;
+
+        if (next < sequence.length) {
+          // Add pause between pairs (after letters-2, 4, 6)
+          const isPairEnd = next % 2 === 0;
+          setTimeout(() => showSlide(next), isPairEnd ? pairGap : 0);
+        } else {
+          // Loop — reset and start again
+          setTimeout(() => {
+            resetAll();
+            showSlide(0);
+          }, pairGap);
+        }
+      }, durationOut);
+
+    }, durationIn + hold);
+  }
+
+  resetAll();
+  showSlide(0);
+</script>
 
 </body>
 </html>
