@@ -570,6 +570,10 @@ a.work-item {
 
 /* ── RESPONSIVE ──────────────────────────────────────────── */
 
+@media (hover: none), (pointer: coarse) {
+  #cursor-dot, #cursor-ring { display: none; }
+}
+
 @media (max-width: 768px) {
   .project-intro   { grid-template-columns: 1fr; padding: 40px 24px; }
   .project-divider { margin: 0 24px; }
@@ -600,6 +604,3 @@ a.work-item {
   .work-grid { grid-template-columns: 1fr; }
 }
 
-@media (hover: none) {
-  #cursor-dot, #cursor-ring { display: none; }
-}
