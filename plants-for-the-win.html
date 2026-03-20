@@ -41,7 +41,7 @@
       </div>
       <div class="meta-item">
         <span class="meta-label">Type</span>
-        <span class="meta-value">Web Design / UI</span>
+        <span class="meta-value">Web Design / Site Build</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">Year</span>
@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="project-description">
-      <p>Write your project description here. Describe the brief, the problem you were solving, and your approach. This is a good place to give context before the visuals.</p>
+      <p>Partnered with the nonprofit, Plants For the Win, to build a website to match their business concept and developing brand identity.</p>
     </div>
   </section>
 
@@ -69,9 +69,9 @@
         <div class="phone-frame">
           <div class="phone-screen">
             <div class="phone-screen-inner">
-              <img src="images/PFTW-Header.png" alt="" />
-              <img src="images/PFTW-Hero.gif" alt="" />
-              <img src="images/PFTW-Body.png" alt="" />
+              <img src="images/PFTW-Header.png" alt="Plants For The Win" />
+              <img src="images/PFTW-Hero.gif" alt="Want Better Gains? Try A PED* *Performance Enhancing Diet" />
+              <img src="images/PFTW-Body.png" alt="Science Backed Benefits" />
               <img src="images/PFTW-mobile-team.gif" alt="" />
               <img src="images/PFTW-Footer.png" alt="" />
             </div>
@@ -119,12 +119,13 @@
     'letters-8'
   ];
 
-  const durationIn  = 500;
+  const durationIn  = 800;
   const durationOut = 300;
-  const hold        = 2200;
-  const pause       = 600;
+  const hold = [600, 900, 600, 900, 600, 900, 600, 900];
+  const pause       = 500;
   const totalPerSlide = durationIn + hold + durationOut;
   const pairGap     = pause;
+  
 
 function resetAll() {
   sequence.forEach(cls => {
@@ -142,30 +143,28 @@ function resetAll() {
     el.classList.add('animate-in');
     console.log(el.className);
 
-    setTimeout(() => {
-      el.classList.remove('animate-in');
-      el.classList.add('animate-out');
-
 setTimeout(() => {
-  el.classList.remove('animate-out');
-  el.style.opacity = '';  // was: el.style.opacity = 0;
+  el.classList.remove('animate-in');
+  void el.offsetWidth;
+  el.classList.add('animate-out');
 
-        const next = index + 1;
+  setTimeout(() => {
+    el.classList.remove('animate-out');
+    void el.offsetWidth;
 
-        if (next < sequence.length) {
-          // Add pause between pairs (after letters-2, 4, 6)
-          const isPairEnd = next % 2 === 0;
-          setTimeout(() => showSlide(next), isPairEnd ? pairGap : 0);
-        } else {
-          // Loop — reset and start again
-          setTimeout(() => {
-            resetAll();
-            showSlide(0);
-          }, pairGap);
-        }
-      }, durationOut);
+    const next = index + 1;
+    if (next < sequence.length) {
+      const isPairEnd = next % 2 === 0;
+      setTimeout(() => showSlide(next), isPairEnd ? pairGap : 0);
+    } else {
+      setTimeout(() => {
+        resetAll();
+        showSlide(0);
+      }, pairGap);
+    }
+  }, durationOut);
 
-    }, durationIn + hold);
+}, durationIn + hold[index]); // ← uses per-slide hold time
   }
 
   resetAll();

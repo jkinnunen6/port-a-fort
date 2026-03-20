@@ -32,6 +32,18 @@ class SiteHeader extends HTMLElement {
       </div>
     `;
 
+// ── HEAD TAGS ────────────────────────────────────
+const favicon = document.createElement('link');
+favicon.rel   = 'icon';
+favicon.type  = 'image/png';
+favicon.href  = 'images/favicon.png';
+document.head.appendChild(favicon);
+
+const appleTouchIcon = document.createElement('link');
+appleTouchIcon.rel   = 'apple-touch-icon';
+appleTouchIcon.href  = 'images/favicon.png';
+document.head.appendChild(appleTouchIcon);
+
     // Toggle logic
     const hamburger = this.querySelector('.hamburger');
     const overlay   = this.querySelector('.mobile-overlay');
@@ -62,8 +74,8 @@ class SiteFooter extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
       <footer>
-        <span>© 2025 Your Name</span>
-        <span>Built by hand</span>
+        <span>© Jeff Kinnunen 2026</span>
+        <span>Built by hand. <br>(Claude's hands)</span>
       </footer>
     `;
   }
