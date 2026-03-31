@@ -8,7 +8,7 @@ class SiteHeader extends HTMLElement {
           <div class="logo-mark">
             <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.08 51.08"><defs><style>.cls-1{fill:#fff;}.cls-2{fill:#3d3d3d;}.cls-3{isolation:isolate;}</style></defs><path class="cls-2" d="m25.54,51.08c14.11,0,25.54-11.43,25.54-25.54S39.65,0,25.54,0C11.43,0,0,11.43,0,25.54s11.43,25.54,25.54,25.54h0"/><g class="cls-3"><path class="cls-1" d="m29.18,31.41c1.08-.16,2.08-.42,2.94-.78v6.86c0,1.34-.08,2.18-.46,3.26-.7,2-1.94,3.5-2.4,3.9-.2.16-.36.22-.52.22-.3,0-.74-.42-.74-.9,0-.26.08-.38.32-.46.74-.2,1.26-.4,1.54-.76.24-.28.4-.72.52-1.4.12-.84.16-2.04.16-3.88v-3.96c0-1.34-.1-1.42-1.36-1.6v-.5Zm2.06-2.78c-.56,0-1.02-.48-1.02-1.02,0-.62.46-1.06,1.04-1.06.54,0,.98.44.98,1.06,0,.54-.44,1.02-1,1.02Z"/><path class="cls-1" d="m44.12,39.69c-1.08,0-2.26.02-2.68.04-.12-.14-3.26-3.86-3.38-3.98-.28-.32-.4-.42-.58-.42-.08,0-.24,0-.36.04v2.22c0,1.34.1,1.42,1.4,1.54v.56h-4.42v-.56c1.34-.12,1.44-.26,1.44-1.54v-9.56c0-1.3-.14-1.34-1.38-1.52v-.52c1.04-.1,2.24-.4,2.96-.68v9.54c.6-.14.98-.38,1.28-.7.46-.46,1.2-1.36,1.54-1.86.42-.58.26-.74-.7-.82v-.56l4.12-.18v.54c-1.4.22-1.8.38-2.66,1.28-.38.4-1.28,1.42-1.7,1.94.4.56,2.44,2.88,3.1,3.58.96.96,1.24,1.02,2.02,1.06v.56Z"/></g></svg>
           </div>
-          <span class="logo-text">Your Name</span>
+          <span class="logo-text">Jeff Kinnunen</span>
         </a>
         <nav class="desktop-nav">
           <a href="index.html" ${page === 'work' ? 'class="active"' : ''}>Work</a>
@@ -145,3 +145,25 @@ function initCursor() {
 }
 
 initCursor();
+
+
+// ── WORK GRID AUTO-STYLE ─────────────────────────────────
+function initWorkGrid() {
+  const items = document.querySelectorAll('.work-item');
+  if (!items.length) return;
+
+  items.forEach((item, i) => {
+    // Random grayscale between 100–220 (avoids too dark or too light)
+    const v = Math.floor(Math.random() * 70 + 190);
+    const hex = v.toString(16).padStart(2, '0');
+    const color = `#${hex}${hex}${hex}`;
+
+    const thumb = item.querySelector('.placeholder-img, .work-thumb');
+    if (thumb) thumb.style.background = color;
+
+    // Staggered animation delay
+    item.style.animationDelay = `${(i + 1) * 0.05}s`;
+  });
+}
+
+initWorkGrid();
