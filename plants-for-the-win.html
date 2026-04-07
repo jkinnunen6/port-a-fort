@@ -31,7 +31,7 @@
     </span>
   </h1>
 </div>
-
+<p class="screen-caption" style="padding:10px 0px 0px 10px;">(recreated hero, altered slightly to emphasize animated text)</p>
   <!-- INTRO -->
   <section class="project-intro">
     <div class="project-meta">
@@ -49,19 +49,73 @@
       </div>
     </div>
     <div class="project-description">
-      <p>Partnered with the nonprofit, Plants For the Win, to build a website to match their business concept and developing brand identity.</p>
+      <p>Partnered with the nonprofit, <a href="https://www.plantsforthewin.com/" class="PFTWHyper" target="_blank">Plants For the Win</a>, to build a website to match their concept and developing brand identity.</p>
     </div>
   </section>
 
+<div class="project-divider"></div>
+
+<!-- SKETCHES -->
+<div class="figma-embed">
+  <p class="figma-intro">Based on a style sheet and some introductory conversations, began by sketching wireframe ideas that would include the elements that were named as priority.</p>
+  <img class="sketches" src="images/pftw-Sketch.png" alt="Sketches of site planning ideas"/>
+</div>
+
+<div class="project-divider"></div>
+<!-- FIGMA EMBED -->
+<div class="figma-embed">
+  <p class="figma-intro">Created figma wireframes to expand on paper layouts and talk through my vision with the founder of the company.</p>
+  <iframe
+    src="https://embed.figma.com/design/03meCnKuteNRCmkhNRyMOc/P4TW?node-id=0-1&embed-host=share"
+    allowfullscreen
+  ></iframe>
+</div>
+
   <div class="project-divider"></div>
+
+<!-- TRADING CARDS -->
+ 
+<div class="figma-embed">
+   <p class="figma-intro">Three "influencer" personas were created for social channels. I took this information and designed trading cards to display the information in a digestable way while </p>
+</div>
+
+<section class="project-section" id="social-content">
+  <div class="carousel">
+    <button class="carousel-btn carousel-btn--prev" aria-label="Previous">&#8592;</button>
+    <div class="carousel-track-wrapper">
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img src="images/lentils.png" alt="Lentils" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/edamame.png" alt="Edamame" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/quinoa.png" alt="Quinoa" />
+        </div>
+      </div>
+    </div>
+    <button class="carousel-btn carousel-btn--next" aria-label="Next">&#8594;</button>
+
+    <div class="carousel-dots">
+      <button class="carousel-dot is-active" aria-label="Slide 1"></button>
+      <button class="carousel-dot" aria-label="Slide 2"></button>
+      <button class="carousel-dot" aria-label="Slide 3"></button>
+    </div>
+  </div>
+</section>
 
   <!-- DESKTOP + MOBILE SIDE BY SIDE -->
   <section class="project-screens">
     <div class="screen-pair">
       <div class="screen screen--desktop">
-        <div class="placeholder-img">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <span>Desktop</span>
+       <div class="desktop-frame">
+          <div class="desktop-screen">
+            <div class="desktop-screen-inner">
+              <img src="images/PFTW-desktop.png" alt="Plants For The Win" />
+            </div>
+          </div>
+          <img src="images/desktop.png" alt="iPhone frame" class="phone-bezel" />
         </div>
         <p class="screen-caption">Desktop Experience</p>
       </div>
@@ -92,6 +146,7 @@
   <script src="components.js"></script>
 
   <script>
+
   // ── Phone scroll ─────────────────────────────
   const phoneFrame  = document.querySelector('.phone-frame');
   const phoneScreen = document.querySelector('.phone-screen-inner');
@@ -169,6 +224,34 @@ setTimeout(() => {
 
   resetAll();
   showSlide(0);
+</script>
+
+<script>
+  // ── Carousel ──────────────────────────────────
+  const track   = document.querySelector('.carousel-track');
+  const slides  = document.querySelectorAll('.carousel-slide');
+  const dots    = document.querySelectorAll('.carousel-dot');
+  const prevBtn = document.querySelector('.carousel-btn--prev');
+  const nextBtn = document.querySelector('.carousel-btn--next');
+  let current   = 0;
+
+  function goTo(index) {
+    current = (index + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+  // Swipe support for mobile
+  let startX = 0;
+  track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(diff > 0 ? current + 1 : current - 1);
+  });
 </script>
 
 </body>

@@ -154,7 +154,7 @@ function initWorkGrid() {
 
   items.forEach((item, i) => {
     // Random grayscale between 100–220 (avoids too dark or too light)
-    const v = Math.floor(Math.random() * 70 + 190);
+    const v = Math.floor(Math.random() * 50 + 210);
     const hex = v.toString(16).padStart(2, '0');
     const color = `#${hex}${hex}${hex}`;
 
