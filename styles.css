@@ -684,7 +684,7 @@ a.work-item {
   font-size: 3.5em;
   text-align: center;
   color: #fff;
-  font-family: 'futura', serif;
+  font-family: 'futura', sans-serif;
   will-change: transform;
   padding: 0;
   margin: 0;
