@@ -508,7 +508,7 @@ a.work-item {
 }
 
 .project-screens {
-  padding: 64px 48px 80px;
+  padding: 0 48px 80px;
 }
 
 .screen-pair {
@@ -633,9 +633,8 @@ a.work-item {
 
 .desktop-screen {
   position: absolute;
-  top: 2.5%;
-  left: 4%;
-  width: 92%;
+  top: 1.5%;
+  width: 100%;
   height: 69%;
   overflow: hidden;
   border-radius: 1px;
@@ -781,7 +780,17 @@ a.work-item {
   color: var(--ink);
   margin-bottom: 24px;
   max-width: 740px;
-  padding-top: 48px;
+  padding: 48px 0 0;
+}
+
+.support-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--ink);
+  margin-bottom: 24px;
+  max-width: 740px;
+  padding: 48px 0 0 48px;
 }
 
 /* ── PFTW CAROUSEL ────────────────────────────────────────────── */
