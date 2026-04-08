@@ -506,6 +506,9 @@ a.work-item {
   background: var(--border);
   margin: 0 48px;
 }
+.project-divider-padding {
+  margin-bottom: 30px;
+}
 
 .project-screens {
   padding: 0 48px 80px;
@@ -621,7 +624,8 @@ a.work-item {
 
 .desktop-frame {
   position: relative;
-  width: 100%;
+  width: 85%;
+  margin: 0 auto;
 }
 
 .desktop-bezel {
