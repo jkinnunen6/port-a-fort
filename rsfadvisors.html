@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RSF Advisors</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <site-header></site-header>
+
+  <!-- INTRO -->
+  <section class="project-intro">
+    <div class="project-meta">
+      <div class="meta-item">
+        <span class="meta-label">Project</span>
+        <span class="meta-value">RSF Advisors</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Type</span>
+        <span class="meta-value">Site Redesign / Site Build</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Year</span>
+        <span class="meta-value">2025</span>
+      </div>
+    </div>
+    <div class="project-description">
+      <p>Worked with interior designer, <a href="https://www.alisonpickart.com/" target="_blank">Alison Pickart</a>, to reorganize, redesign and build the website showcasing her work.</p>
+    </div>
+  </section>
+
+<div class="project-divider"></div>
+
+<!-- DESKTOP + MOBILE SIDE BY SIDE -->
+  <section class="project-screens">
+    <div class="screen screen--mobile">
+      <div class="desktop-frame">
+        <div class="desktop-screen">
+          <div class="desktop-screen-inner">
+            <img src="images/RSF.png" alt="Plants For The Win" />
+          </div>
+        </div>
+          <img src="images/desktop.png" alt="iPhone frame" class="phone-bezel" />
+      </div>
+    </div>
+  </section>
+
+  <div class="project-divider"></div>
+<br>
+  <section class="project-section" id="social-content">
+  <div class="carousel">
+    <button class="carousel-btn carousel-btn--prev" aria-label="Previous">&#8592;</button>
+    <div class="carousel-track-wrapper">
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img src="images/rsfteams.png" alt="Lentils" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/rsfexpertise.png" alt="Edamame" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/rsfclients.png" alt="Quinoa" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/rsfcontact.png" alt="Quinoa" />
+        </div>
+      </div>
+    </div>
+    <button class="carousel-btn carousel-btn--next" aria-label="Next">&#8594;</button>
+
+    <div class="carousel-dots">
+      <button class="carousel-dot is-active" aria-label="Slide 1"></button>
+      <button class="carousel-dot" aria-label="Slide 2"></button>
+      <button class="carousel-dot" aria-label="Slide 3"></button>
+      <button class="carousel-dot" aria-label="Slide 4"></button>
+      
+      
+    </div>
+  </div>
+</section>
+<br>
+<br>
+  <!-- BACK LINK -->
+  <div class="project-back">
+    <a href="index.html">← Back to Work</a>
+  </div>
+
+  <site-footer></site-footer>
+  <script src="components.js"></script>
+
+  <script>
+
+  // ── Phone scroll ─────────────────────────────
+  const desktopFrame  = document.querySelector('.desktop-frame');
+  const desktopScreen = document.querySelector('.desktop-screen-inner');
+  let currentScroll = 0;
+
+  desktopFrame.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const containerH = document.querySelector('.desktop-screen').offsetHeight;
+    const totalH     = Array.from(desktopScreen.children)
+                         .reduce((sum, img) => sum + img.offsetHeight, 0);
+    const maxScroll  = totalH - containerH;
+    currentScroll = Math.min(Math.max(currentScroll + e.deltaY, 0), maxScroll);
+    desktopScreen.style.transform = `translateY(-${currentScroll}px)`;
+  }, { passive: false });
+
+</script>
+
+<script>
+  // ── Carousel ──────────────────────────────────
+  const track   = document.querySelector('.carousel-track');
+  const slides  = document.querySelectorAll('.carousel-slide');
+  const dots    = document.querySelectorAll('.carousel-dot');
+  const prevBtn = document.querySelector('.carousel-btn--prev');
+  const nextBtn = document.querySelector('.carousel-btn--next');
+  let current   = 0;
+
+  function goTo(index) {
+    current = (index + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+  // Swipe support for mobile
+  let startX = 0;
+  track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(diff > 0 ? current + 1 : current - 1);
+  });
+</script>
+
+</body>
+</html>
