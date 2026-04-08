@@ -47,6 +47,47 @@
     </div>
   </section>
 
+  <div class="project-divider"></div>
+<br>
+  <section class="project-section" id="social-content">
+  <div class="carousel">
+    <button class="carousel-btn carousel-btn--prev" aria-label="Previous">&#8592;</button>
+    <div class="carousel-track-wrapper">
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img src="images/APabout.png" alt="Lentils" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/APpress.png" alt="Edamame" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/APcontact.png" alt="Quinoa" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/APcollaborations.png" alt="Quinoa" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/APdestinations.png" alt="Quinoa" />
+        </div>
+        <div class="carousel-slide">
+          <img src="images/APshop.png" alt="Quinoa" />
+        </div>
+      </div>
+    </div>
+    <button class="carousel-btn carousel-btn--next" aria-label="Next">&#8594;</button>
+
+    <div class="carousel-dots">
+      <button class="carousel-dot is-active" aria-label="Slide 1"></button>
+      <button class="carousel-dot" aria-label="Slide 2"></button>
+      <button class="carousel-dot" aria-label="Slide 3"></button>
+      <button class="carousel-dot" aria-label="Slide 4"></button>
+      <button class="carousel-dot" aria-label="Slide 5"></button>
+      <button class="carousel-dot" aria-label="Slide 6"></button>
+    </div>
+  </div>
+</section>
+<br>
+<br>
   <!-- BACK LINK -->
   <div class="project-back">
     <a href="index.html">← Back to Work</a>
@@ -72,6 +113,34 @@
     desktopScreen.style.transform = `translateY(-${currentScroll}px)`;
   }, { passive: false });
 
+</script>
+
+<script>
+  // ── Carousel ──────────────────────────────────
+  const track   = document.querySelector('.carousel-track');
+  const slides  = document.querySelectorAll('.carousel-slide');
+  const dots    = document.querySelectorAll('.carousel-dot');
+  const prevBtn = document.querySelector('.carousel-btn--prev');
+  const nextBtn = document.querySelector('.carousel-btn--next');
+  let current   = 0;
+
+  function goTo(index) {
+    current = (index + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+  // Swipe support for mobile
+  let startX = 0;
+  track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+  track.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(diff > 0 ? current + 1 : current - 1);
+  });
 </script>
 
 </body>
