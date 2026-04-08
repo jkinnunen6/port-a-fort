@@ -267,11 +267,6 @@ a.work-item {
 .overlay-nav a:hover,
 .overlay-nav a.active { color: var(--accent); }
 
-/* ── RESPONSIVE ──────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .desktop-nav { display: none; }
-  .hamburger   { display: flex; }
-}
 
 /* ── PAGE TITLE ──────────────────────────────────────────── */
 
@@ -731,7 +726,7 @@ a.work-item {
 }
 
 .copybelow {
-  font-size: 0.35em;
+  font-size: .35em;
   line-height: 2em;
   display: block;
   margin-left: -18px;
@@ -1096,9 +1091,13 @@ a.work-item {
 
 /* ── RESPONSIVE ──────────────────────────────────────────── */
 
-
 @media (hover: none), (pointer: coarse) {
   #cursor-dot, #cursor-ring { display: none; }
+}
+
+@media (max-width: 768px) {
+  .desktop-nav { display: none; }
+  .hamburger   { display: flex; }
 }
 
 @media (max-width: 768px) {
@@ -1145,4 +1144,9 @@ a.work-item {
 
 @media (max-width: 480px) {
   .project-footnote { padding: 32px 24px 48px; }
+}
+
+@media (max-width: 480px) {
+.ml4 {
+  font-size: 1.5em;}
 }
