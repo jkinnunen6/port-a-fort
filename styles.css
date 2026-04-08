@@ -29,6 +29,7 @@ body {
   font-family: 'DM Mono', monospace;
   min-height: 100vh;
   cursor: none;
+  overflow-x: hidden;
 }
 
 /* ── FOOTER ──────────────────────────────────────────────── */
@@ -442,14 +443,6 @@ a.work-item {
 
 /* ── PROJECT PAGE ────────────────────────────────────────── */
 
-.project-hero {
-  position: relative;
-  width: 100%;
-  height: 70vh;
-  background: var(--border);
-  overflow: hidden;
-}
-
 .project-hero .placeholder-img {
   position: absolute;
   inset: 0;
@@ -671,7 +664,11 @@ a.work-item {
   width: 100%;
   height: 70vh;
   overflow: visible;
-  box-shadow: inset 0 0 0 1000px rgba(0,30,70,.4);
+  box-shadow: inset 0 0 0 1000px rgba(0,30,70,.4);.project-hero {
+  position: relative;
+  background: var(--border);
+  overflow: hidden;
+}
 }
 
 .PFTWHyper {
