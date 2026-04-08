@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alison Pickart Design</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <site-header></site-header>
+
+  <!-- INTRO -->
+  <section class="project-intro">
+    <div class="project-meta">
+      <div class="meta-item">
+        <span class="meta-label">Project</span>
+        <span class="meta-value">Alison Pickart Design</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Type</span>
+        <span class="meta-value">Web ReDesign / Site Build</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Year</span>
+        <span class="meta-value">2024</span>
+      </div>
+    </div>
+    <div class="project-description">
+      <p>Worked with interior designer, <a href="https://www.alisonpickart.com/" target="_blank">Alison Pickart</a>, to reorganize, redesign and build the website showcasing her work.</p>
+    </div>
+  </section>
+
+<div class="project-divider"></div>
+
+<!-- DESKTOP + MOBILE SIDE BY SIDE -->
+  <section class="project-screens">
+    <div class="screen screen--mobile">
+      <div class="desktop-frame">
+        <div class="desktop-screen">
+          <div class="desktop-screen-inner">
+            <img src="images/APinteriors.png" alt="Plants For The Win" />
+          </div>
+        </div>
+          <img src="images/desktop.png" alt="iPhone frame" class="phone-bezel" />
+      </div>
+    </div>
+  </section>
+
+  <!-- BACK LINK -->
+  <div class="project-back">
+    <a href="index.html">← Back to Work</a>
+  </div>
+
+  <site-footer></site-footer>
+  <script src="components.js"></script>
+
+  <script>
+
+  // ── Phone scroll ─────────────────────────────
+  const desktopFrame  = document.querySelector('.desktop-frame');
+  const desktopScreen = document.querySelector('.desktop-screen-inner');
+  let currentScroll = 0;
+
+  desktopFrame.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const containerH = document.querySelector('.desktop-screen').offsetHeight;
+    const totalH     = Array.from(desktopScreen.children)
+                         .reduce((sum, img) => sum + img.offsetHeight, 0);
+    const maxScroll  = totalH - containerH;
+    currentScroll = Math.min(Math.max(currentScroll + e.deltaY, 0), maxScroll);
+    desktopScreen.style.transform = `translateY(-${currentScroll}px)`;
+  }, { passive: false });
+
+</script>
+
+</body>
+</html>
