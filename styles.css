@@ -655,6 +655,7 @@ a.work-item {
 
 /* ── PFTW ────────────────────────────────────────────── */
 .project-hero {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -664,11 +665,7 @@ a.work-item {
   width: 100%;
   height: 70vh;
   overflow: visible;
-  box-shadow: inset 0 0 0 1000px rgba(0,30,70,.4);.project-hero {
-  position: relative;
-  background: var(--border);
-  overflow: hidden;
-}
+  box-shadow: inset 0 0 0 1000px rgba(0,30,70,.4);
 }
 
 .PFTWHyper {
@@ -1126,6 +1123,7 @@ a.work-item {
 @media (max-width: 768px) {
   .figma-embed          { padding: 0 24px 48px; }
   .figma-embed iframe   { height: 400px; }
+  .support-text { padding: 48px 24px 48px; }
 }
 
 @media (max-width: 480px) {
