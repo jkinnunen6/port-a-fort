@@ -807,7 +807,8 @@ a.work-item {
 .carousel-slide {
   min-width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .carousel-slide img {
@@ -815,6 +816,15 @@ a.work-item {
   max-height: 560px;
   object-fit: contain;
   display: block;
+}
+
+.carousel-caption {
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
 }
 
 .carousel-btn {
