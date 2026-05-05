@@ -15,25 +15,136 @@
     <span>Personal &amp; Experimental</span>
   </div>
 
-  <main class="collage">
+  <!-- ── LAMPSHADE GALLERY ─────────────────────────────────── -->
+  <!-- To add more images: copy any .lampshade-item block below -->
+  <section class="lampshade-wrap">
+    <div class="lampshade-track">
 
-    <div class="collage-item"><img src="images/dice-1.jpg" alt="Dice" /></div>
-    <div class="collage-item"><img src="images/dice-2.jpg" alt="Dice" /></div>
-    <div class="collage-item"><img src="images/head-1.jpg" alt="Head" /></div>
-    <div class="collage-item"><img src="images/head-2.jpg" alt="Head" /></div>
-    <div class="collage-item"><img src="images/head-3.jpg" alt="Head" /></div>
-    <div class="collage-item"><img src="images/head-4.jpg" alt="Head" /></div>
-    <div class="collage-item"><img src="images/maps.jpg" alt="Maps" /></div>
-    <div class="collage-item"><img src="images/flowers.jpg" alt="Flowers" /></div>
-    <div class="collage-item"><img src="images/Jelly.jpg" alt="Jelly" /></div>
-    <div class="collage-item"><img src="images/sheep.jpg" alt="Sheep" /></div>
-    <div class="collage-item"><img src="images/felt-1.jpg" alt="Felt" /></div>
-    <div class="collage-item"><img src="images/felt-2.jpg" alt="Felt" /></div>
+      <div class="lampshade-item"><img src="images/dice-1.jpg"  alt="Dice" /></div>
+      <div class="lampshade-item"><img src="images/dice-2.jpg"  alt="Dice" /></div>
+      <div class="lampshade-item"><img src="images/head-1.jpg"  alt="Head" /></div>
+      <div class="lampshade-item"><img src="images/head-2.jpg"  alt="Head" /></div>
+      <div class="lampshade-item"><img src="images/head-3.jpg"  alt="Head" /></div>
+      <div class="lampshade-item"><img src="images/head-4.jpg"  alt="Head" /></div>
+      <div class="lampshade-item"><img src="images/maps.jpg"    alt="Maps" /></div>
+      <div class="lampshade-item"><img src="images/flowers.jpg" alt="Flowers" /></div>
+      <div class="lampshade-item"><img src="images/Jelly.jpg"   alt="Jelly" /></div>
+      <div class="lampshade-item"><img src="images/sheep.jpg"   alt="Sheep" /></div>
+      <div class="lampshade-item"><img src="images/felt-1.jpg"  alt="Felt" /></div>
+      <div class="lampshade-item"><img src="images/felt-2.jpg"  alt="Felt" /></div>
 
-  </main>
+    </div>
+  </section>
 
   <site-footer></site-footer>
-<script src="components.js"></script>
+  <script src="components.js"></script>
+
+  <script>
+  (function () {
+    const wrap  = document.querySelector('.lampshade-wrap');
+    const track = document.querySelector('.lampshade-track');
+    if (!wrap || !track) return;
+
+    /* ── Duplicate all items so the loop is seamless ─────── */
+    [...track.children].forEach(el => track.appendChild(el.cloneNode(true)));
+
+    let pos      = 0;      // current scroll position in px
+    let vel      = 0;      // velocity in px/frame
+    let dragging = false;
+    let lastX    = 0;
+    let lastT    = 0;
+    let rafId;
+
+    /* Half the track width is one full set of images */
+    function seam() { return track.scrollWidth / 2; }
+
+    /* Keep pos within [0, seam) so the loop is invisible */
+    function normalise() {
+      const s = seam();
+      pos = ((pos % s) + s) % s;
+    }
+
+    function render() {
+      normalise();
+      track.style.transform = `translateX(-${pos}px)`;
+    }
+
+    /* ── Main animation loop ────────────────────────────── */
+    const AUTO = 0.5; // px/frame auto-scroll speed
+
+    function tick() {
+      if (!dragging) {
+        /* Decay velocity, then settle into auto-scroll */
+        vel = Math.abs(vel) > 0.08 ? vel * 0.94 : AUTO;
+        pos += vel;
+        render();
+      }
+      rafId = requestAnimationFrame(tick);
+    }
+
+    tick();
+
+    /* ── Mouse wheel ────────────────────────────────────── */
+    wrap.addEventListener('wheel', e => {
+      e.preventDefault();
+      /* Honour both horizontal and vertical wheel deltas */
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      vel = 0;
+      pos += delta;
+      render();
+    }, { passive: false });
+
+    /* ── Mouse drag ─────────────────────────────────────── */
+    wrap.addEventListener('mousedown', e => {
+      dragging = true;
+      lastX    = e.clientX;
+      lastT    = performance.now();
+      vel      = 0;
+      wrap.classList.add('is-dragging');
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const now = performance.now();
+      const dt  = Math.max(now - lastT, 1);
+      const dx  = lastX - e.clientX;
+      vel       = (dx / dt) * 16;   /* scale to px/frame at 60 fps */
+      pos      += dx;
+      lastX     = e.clientX;
+      lastT     = now;
+      render();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!dragging) return;
+      dragging = false;
+      wrap.classList.remove('is-dragging');
+      /* vel is already set — tick() will carry the inertia forward */
+    });
+
+    /* ── Touch (finger scroll on mobile) ────────────────── */
+    wrap.addEventListener('touchstart', e => {
+      dragging = true;
+      lastX    = e.touches[0].clientX;
+      lastT    = performance.now();
+      vel      = 0;
+    }, { passive: true });
+
+    wrap.addEventListener('touchmove', e => {
+      const now = performance.now();
+      const dt  = Math.max(now - lastT, 1);
+      const dx  = lastX - e.touches[0].clientX;
+      vel       = (dx / dt) * 16;
+      pos      += dx;
+      lastX     = e.touches[0].clientX;
+      lastT     = now;
+      render();
+    }, { passive: true });
+
+    wrap.addEventListener('touchend', () => { dragging = false; });
+
+  })();
+  </script>
 
 </body>
 </html>

@@ -385,45 +385,58 @@ a.work-item {
 
 .work-item:hover .overlay-label { transform: translateY(0); }
 
-/* ── PLAY PAGE COLLAGE ───────────────────────────────────── */
+/* ── PLAY PAGE LAMPSHADE GALLERY ─────────────────────────── */
 
-.collage {
-  columns: 4;
-  column-gap: 2px;
-  padding: 0 48px 80px;
-}
-
-.collage-item {
-  break-inside: avoid;
-  margin-bottom: 2px;
+.lampshade-wrap {
+  height: 480px;
   overflow: hidden;
-  cursor: pointer;
-  animation: fadeUp 0.6s ease both;
   position: relative;
+  cursor: grab;
+  margin-bottom: 80px;
+  /* Edge fade creates the wrap-around illusion */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
 }
 
-.collage-item:nth-child(1)  { animation-delay: 0.04s; }
-.collage-item:nth-child(2)  { animation-delay: 0.08s; }
-.collage-item:nth-child(3)  { animation-delay: 0.12s; }
-.collage-item:nth-child(4)  { animation-delay: 0.16s; }
-.collage-item:nth-child(5)  { animation-delay: 0.20s; }
-.collage-item:nth-child(6)  { animation-delay: 0.24s; }
-.collage-item:nth-child(7)  { animation-delay: 0.28s; }
-.collage-item:nth-child(8)  { animation-delay: 0.32s; }
-.collage-item:nth-child(9)  { animation-delay: 0.36s; }
-.collage-item:nth-child(10) { animation-delay: 0.40s; }
-.collage-item:nth-child(11) { animation-delay: 0.44s; }
-.collage-item:nth-child(12) { animation-delay: 0.48s; }
+.lampshade-wrap.is-dragging { cursor: grabbing; }
 
-.collage-item img {
-  width: 100%;
-  height: auto;
+.lampshade-track {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  gap: 3px;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.lampshade-item {
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.lampshade-item img {
+  height: 100%;
+  width: auto;
   display: block;
-  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-.collage-item:hover img {
-  opacity: 0.8;
+@media (max-width: 768px) {
+  .lampshade-wrap { height: 300px; }
 }
 
 
@@ -1213,7 +1226,7 @@ a.work-item {
   nav             { gap: 20px; }
   .page-title     { padding: 36px 24px 20px; }
   .work-grid      { padding: 0 24px 48px; }
-  .collage        { columns: 2; padding: 0 24px 48px; }
+  .lampshade-wrap { height: 260px; }
 }
 
 @media (max-width: 768px) {
