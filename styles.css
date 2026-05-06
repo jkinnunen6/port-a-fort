@@ -393,24 +393,32 @@ a.work-item {
   position: relative;
   cursor: grab;
   margin-bottom: 80px;
-  /* Edge fade creates the wrap-around illusion */
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
+  background: #000;
 }
 
 .lampshade-wrap.is-dragging { cursor: grabbing; }
+
+/* Black gradient overlays replace the mask so the fade colour is controllable */
+.lampshade-wrap::before,
+.lampshade-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.lampshade-wrap::before {
+  left: 0;
+  background: linear-gradient(to right, #000 0%, transparent 100%);
+}
+
+.lampshade-wrap::after {
+  right: 0;
+  background: linear-gradient(to left, #000 0%, transparent 100%);
+}
 
 .lampshade-track {
   display: flex;
