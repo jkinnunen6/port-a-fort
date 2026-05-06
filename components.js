@@ -75,7 +75,7 @@ class SiteFooter extends HTMLElement {
     this.innerHTML = `
       <footer>
         <span>© Jeff Kinnunen 2026</span>
-        <span>Built by hand. <br>(Claude's hands)</span>
+        <span>Built by hand. <br>(Claude's hand)</span>
       </footer>
     `;
   }
