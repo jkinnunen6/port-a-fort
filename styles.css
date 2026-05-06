@@ -434,6 +434,7 @@ a.work-item {
   flex-shrink: 0;
   height: 100%;
   overflow: hidden;
+  position: relative;
 }
 
 .lampshade-item img {
@@ -441,6 +442,18 @@ a.work-item {
   width: auto;
   display: block;
   pointer-events: none;
+}
+
+.lampshade-label {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 @media (max-width: 768px) {
