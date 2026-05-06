@@ -1068,6 +1068,60 @@ a.work-item {
   top: calc(50% + 28px);
 }
 
+/* ── TABBED PROJECT PAGE ─────────────────────────────────── */
+
+.tab-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  margin-bottom: 64px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 16px 32px 16px 0;
+  cursor: none;
+  transition: color 0.2s;
+  position: relative;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tab-btn:hover { color: var(--ink); }
+
+.tab-btn.is-active { color: var(--ink); }
+
+.tab-btn.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: calc(100% - 32px);
+  height: 1px;
+  background: var(--accent);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.is-active {
+  display: block;
+  animation: fadeUp 0.35s ease both;
+}
+
 /* ── ENAMEL PIN PROJECT ──────────────────────────────────── */
 
 .pin-board-section {
