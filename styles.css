@@ -1070,11 +1070,13 @@ a.work-item {
 
 /* ── TABBED PROJECT PAGE ─────────────────────────────────── */
 
+/* The nav's bottom border acts as the "desk" the folders sit on */
 .tab-nav {
   display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--border);
+  align-items: flex-end;
+  gap: 4px;
   padding: 0 48px;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 64px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -1088,28 +1090,45 @@ a.work-item {
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  /* Inactive: slightly recessed background, full border including bottom */
+  background: var(--border);
   color: var(--muted);
-  background: none;
-  border: none;
-  padding: 16px 32px 16px 0;
+  border: 1px solid var(--border);
+  border-radius: 4px 4px 0 0;
+  padding: 10px 20px;
+  margin-top: 8px;        /* inactive tabs sit lower */
   cursor: none;
-  transition: color 0.2s;
-  position: relative;
   white-space: nowrap;
   flex-shrink: 0;
+  position: relative;
+  transition: background 0.2s, color 0.2s;
 }
 
-.tab-btn:hover { color: var(--ink); }
+.tab-btn:hover {
+  background: #e8e4dd;
+  color: var(--ink);
+}
 
-.tab-btn.is-active { color: var(--ink); }
+/* Active tab: lifted, page-colour fill, no bottom border, overlaps the nav line */
+.tab-btn.is-active {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--border);
+  border-bottom-color: var(--bg); /* hides the bottom border, merging with content */
+  margin-top: 0;                  /* sits at full height — visually "raised" */
+  margin-bottom: -1px;            /* overlaps the nav's bottom border */
+  padding: 14px 20px 11px;        /* slightly taller than inactive */
+}
 
-.tab-btn.is-active::after {
+/* Coloured top edge on active tab — the key "this is selected" signal */
+.tab-btn.is-active::before {
   content: '';
   position: absolute;
-  bottom: -1px;
+  top: 0;
   left: 0;
-  width: calc(100% - 32px);
-  height: 1px;
+  right: 0;
+  height: 2px;
+  border-radius: 4px 4px 0 0;
   background: var(--accent);
 }
 
