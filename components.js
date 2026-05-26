@@ -13,7 +13,7 @@ class SiteHeader extends HTMLElement {
         <nav class="desktop-nav">
           <a href="index.html" ${page === 'work' ? 'class="active"' : ''}>Work</a>
           <a href="play.html" ${page === 'play' ? 'class="active"' : ''}>Play</a>
-          <a href="resume.pdf" target="_blank">Resume</a>
+         /* <a href="resume.pdf" target="_blank">Resume</a> */
         </nav>
         <button class="hamburger" aria-label="Open menu">
           <span></span>
@@ -74,8 +74,8 @@ class SiteFooter extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
       <footer>
-        <span>© Jeff Kinnunen 2026</span>
-        <span>Built by hand. <br>(Claude's hand)</span>
+        <span>© Jeff Kinnunen 2026<br>jeff.kinnunen@gmail.com</span>
+        <span>Built by hand.</span>
       </footer>
     `;
   }
