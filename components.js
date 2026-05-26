@@ -13,10 +13,8 @@ class SiteHeader extends HTMLElement {
         <nav class="desktop-nav">
           <a href="index.html" ${page === 'work' ? 'class="active"' : ''}>Work</a>
           <a href="play.html" ${page === 'play' ? 'class="active"' : ''}>Play</a>
-         /* <a href="resume.pdf" target="_blank">Resume</a> */
         </nav>
         <button class="hamburger" aria-label="Open menu">
-          <span></span>
           <span></span>
           <span></span>
         </button>
@@ -27,7 +25,6 @@ class SiteHeader extends HTMLElement {
         <nav class="overlay-nav">
           <a href="index.html" ${page === 'work' ? 'class="active"' : ''}>Work</a>
           <a href="play.html" ${page === 'play' ? 'class="active"' : ''}>Play</a>
-          <a href="resume.pdf" target="_blank">Resume</a>
         </nav>
       </div>
     `;
