@@ -667,6 +667,11 @@ a.work-item {
   flex-shrink: 0;
 }
 
+.iwi-embed {
+  border: none;
+  display: block;
+}
+
 .desktop-screen img {
   width: 100%;
   display: block;

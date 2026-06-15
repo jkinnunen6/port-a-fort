@@ -37,6 +37,26 @@
 
   <div class="project-divider"></div>
 
+  <!-- LIVE DESKTOP EMBED -->
+  <section class="project-screens">
+    <div class="screen screen--mobile">
+      <div class="desktop-frame">
+        <div class="desktop-screen">
+          <iframe
+            class="iwi-embed"
+            src="https://integralwellnessinstitute.com/"
+            title="Integral Wellness Institute — live site"
+            scrolling="yes"
+          ></iframe>
+        </div>
+        <img src="images/desktop.png" alt="Desktop computer frame" class="phone-bezel" />
+      </div>
+    </div>
+    <p class="screen-caption" style="text-align:center; padding-top: 12px;">Live site — scroll within the frame to explore</p>
+  </section>
+
+  <div class="project-divider"></div>
+
   <!-- SECTION 01 — THE BRIEF -->
   <section class="project-section">
     <div class="project-section-header">
@@ -48,8 +68,8 @@
         <p>Integral Wellness Institute needed a digital presence that could carry the authority of two seasoned specialists — a master-certified executive coach and a licensed naturopathic doctor — while remaining approachable to the corporate clients and executives they serve. The site needed to communicate three distinct service areas clearly without fragmenting the brand.</p>
       </div>
       <div class="project-section-image">
-        <!-- Drop in: full homepage desktop screenshot -->
-        <img src="images/iwi-desktop.png" alt="Integral Wellness Institute homepage — desktop (for placement only)" class="section-img" />
+        <!-- Drop in: services section or interior page screenshot -->
+        <img src="images/iwi-services.png" alt="Integral Wellness Institute — services section (for placement only)" class="section-img" />
       </div>
     </div>
   </section>
@@ -64,30 +84,11 @@
     </div>
     <div class="project-section-body">
       <div class="project-section-text">
-        <p>Every page is a custom PHP template — no Elementor, no Divi, no shortcode soup. CSS was written by hand throughout, with a consistent design token system governing spacing, type, and colour. The three service pillars — Workplace, Executive, and Clinical Wellness — each required their own content architecture while sharing a unified visual language.</p>
+        <p>Every page is a custom PHP template — no Elementor, no Divi, no shortcode soup. CSS was written by hand throughout, with a consistent design system governing spacing, type, and colour. The three service pillars — Workplace, Executive, and Clinical Wellness — each required their own content architecture while sharing a unified visual language.</p>
       </div>
       <div class="project-section-image">
-        <!-- Drop in: services section or interior page screenshot -->
-        <img src="images/iwi-services.png" alt="Integral Wellness Institute services section (for placement only)" class="section-img" />
-      </div>
-    </div>
-  </section>
-
-  <div class="project-divider"></div>
-
-  <!-- SECTION 03 — MOBILE -->
-  <section class="project-section" style="padding-bottom: 80px;">
-    <div class="project-section-header">
-      <span class="project-section-number">03</span>
-      <h2 class="project-section-title">Responsive</h2>
-    </div>
-    <div class="project-section-body">
-      <div class="project-section-text">
-        <p>With all styling hand-written, every breakpoint was a deliberate decision rather than a framework default. The mobile experience was designed and built in parallel — not retrofitted — ensuring the content hierarchy and visual weight hold up at any screen size.</p>
-      </div>
-      <div class="project-section-image">
-        <!-- Drop in: mobile screenshot(s) -->
-        <img src="images/iwi-mobile.png" alt="Integral Wellness Institute homepage — mobile (for placement only)" class="section-img" />
+        <!-- Drop in: mobile screenshot -->
+        <img src="images/iwi-mobile.png" alt="Integral Wellness Institute — mobile view (for placement only)" class="section-img" />
       </div>
     </div>
   </section>
@@ -99,6 +100,24 @@
 
   <site-footer></site-footer>
   <script src="components.js"></script>
+
+  <script>
+    /* ── Scale the iframe to render at 1440px then fit the frame ── */
+    const embed  = document.querySelector('.iwi-embed');
+    const screen = document.querySelector('.desktop-screen');
+
+    function scaleEmbed() {
+      if (!embed || !screen) return;
+      const scale = screen.offsetWidth / 1440;
+      embed.style.width  = '1440px';
+      embed.style.height = (screen.offsetHeight / scale) + 'px';
+      embed.style.transform = `scale(${scale})`;
+      embed.style.transformOrigin = 'top left';
+    }
+
+    scaleEmbed();
+    window.addEventListener('resize', scaleEmbed);
+  </script>
 
 </body>
 </html>
