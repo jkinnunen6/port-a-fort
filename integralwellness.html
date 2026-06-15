@@ -102,14 +102,14 @@
   <script src="components.js"></script>
 
   <script>
-    /* ── Scale the iframe to render at 1440px then fit the frame ── */
+    /* ── Scale the iframe to render at 1920px then fit the frame ── */
     const embed  = document.querySelector('.iwi-embed');
     const screen = document.querySelector('.desktop-screen');
 
     function scaleEmbed() {
       if (!embed || !screen) return;
-      const scale = screen.offsetWidth / 1440;
-      embed.style.width  = '1440px';
+      const scale = screen.offsetWidth / 1920;
+      embed.style.width  = '1920px';
       embed.style.height = (screen.offsetHeight / scale) + 'px';
       embed.style.transform = `scale(${scale})`;
       embed.style.transformOrigin = 'top left';

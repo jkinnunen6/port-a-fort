@@ -597,6 +597,7 @@ a.work-item {
   width: 100%;
   display: block;
   z-index: 2;
+  pointer-events: none;
 }
 
 .phone-screen {
