@@ -102,20 +102,26 @@
   <script src="components.js"></script>
 
   <script>
-    /* ── Scale the iframe to render at 1920px then fit the frame ── */
-    const embed  = document.querySelector('.iwi-embed');
-    const screen = document.querySelector('.desktop-screen');
+    /* ── Scale the iframe to render at 1440px then fit the frame ── */
+    const embed = document.querySelector('.iwi-embed');
+    const screenEl = document.querySelector('.desktop-screen');
+    const bezel = document.querySelector('.phone-bezel');
 
     function scaleEmbed() {
-      if (!embed || !screen) return;
-      const scale = screen.offsetWidth / 1920;
-      embed.style.width  = '1920px';
-      embed.style.height = (screen.offsetHeight / scale) + 'px';
+      if (!embed || !screenEl) return;
+      const scale = (screenEl.offsetWidth / 1440) * 0.9;
+      embed.style.width  = '1440px';
+      embed.style.height = (screenEl.offsetHeight / scale) + 'px';
       embed.style.transform = `scale(${scale})`;
       embed.style.transformOrigin = 'top left';
     }
 
-    scaleEmbed();
+    /* Wait until bezel image is loaded so the frame has its real height */
+    if (bezel && bezel.complete) {
+      scaleEmbed();
+    } else if (bezel) {
+      bezel.addEventListener('load', scaleEmbed);
+    }
     window.addEventListener('resize', scaleEmbed);
   </script>
 
