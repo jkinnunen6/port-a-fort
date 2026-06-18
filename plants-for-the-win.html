@@ -123,7 +123,7 @@
         <p class="screen-caption">Desktop Experience</p>
       </div>
       <div class="screen screen--mobile">
-        <div class="phone-frame">
+        <div class="phone-frame" style="width: 260px; margin: 0 auto;">
           <div class="phone-screen">
             <div class="phone-screen-inner">
               <img src="images/PFTW-Header.png" alt="Plants For The Win" />
@@ -155,14 +155,29 @@
   const phoneScreen = document.querySelector('.phone-screen-inner');
   let currentScroll = 0;
 
-  phoneFrame.addEventListener('wheel', (e) => {
-    e.preventDefault();
+  function pftwScroll(dy) {
     const containerH = document.querySelector('.phone-screen').offsetHeight;
     const totalH     = Array.from(phoneScreen.children)
                          .reduce((sum, img) => sum + img.offsetHeight, 0);
     const maxScroll  = totalH - containerH;
-    currentScroll = Math.min(Math.max(currentScroll + e.deltaY, 0), maxScroll);
+    currentScroll = Math.min(Math.max(currentScroll + dy, 0), maxScroll);
     phoneScreen.style.transform = `translateY(-${currentScroll}px)`;
+  }
+
+  phoneFrame.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    pftwScroll(e.deltaY);
+  }, { passive: false });
+
+  let pftwTouchY = 0;
+  phoneFrame.addEventListener('touchstart', (e) => {
+    pftwTouchY = e.touches[0].clientY;
+  }, { passive: true });
+  phoneFrame.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const dy = pftwTouchY - e.touches[0].clientY;
+    pftwTouchY = e.touches[0].clientY;
+    pftwScroll(dy);
   }, { passive: false });
 
   // ── CSS-driven hero text ──────────────────────

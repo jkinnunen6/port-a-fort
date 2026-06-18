@@ -186,14 +186,29 @@
     let phoneScroll   = 0;
 
     if (phoneFrame && phoneScreen) {
-      phoneFrame.addEventListener('wheel', (e) => {
-        e.preventDefault();
+      function iwiScroll(dy) {
         const containerH = document.querySelector('.phone-screen').offsetHeight;
         const totalH     = Array.from(phoneScreen.children)
                              .reduce((sum, img) => sum + img.offsetHeight, 0);
         const maxScroll  = totalH - containerH;
-        phoneScroll = Math.min(Math.max(phoneScroll + e.deltaY, 0), maxScroll);
+        phoneScroll = Math.min(Math.max(phoneScroll + dy, 0), maxScroll);
         phoneScreen.style.transform = `translateY(-${phoneScroll}px)`;
+      }
+
+      phoneFrame.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        iwiScroll(e.deltaY);
+      }, { passive: false });
+
+      let iwiTouchY = 0;
+      phoneFrame.addEventListener('touchstart', (e) => {
+        iwiTouchY = e.touches[0].clientY;
+      }, { passive: true });
+      phoneFrame.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const dy = iwiTouchY - e.touches[0].clientY;
+        iwiTouchY = e.touches[0].clientY;
+        iwiScroll(dy);
       }, { passive: false });
     }
   </script>
