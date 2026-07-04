@@ -9,17 +9,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,100&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --linen:#EEEEEE;
+    --linen:#F2EEE6;
     --ink:#2E2A3A;
     --indigo:#3E5C94;
     --mustard:#D9A21B;
     --madder:#B4553F;
     --sage:#7A8B5C;
     --plum:#7B5E7B;
-    --card:#F9F9F9;
-    --line:#A5A9AA;
+    --card:#FBF9F4;
+    --line:#DDD6C8;
     --muted:#8A8375;
-    --eggshell:#F9FEFF;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{font-size:17px}
@@ -74,27 +73,30 @@
 
   /* ---------- current step card ---------- */
   .current{
-    position:relative;
+    position:relative;z-index:2;
     background:var(--card);
-    border:2px solid var(--indigo);
+    border:2px solid var(--cur,var(--indigo));
     border-radius:14px;
     padding:1.4rem 1.4rem 1.2rem;
     margin-bottom:2rem;
-    box-shadow:0 3px 0 var(--indigo);
+    box-shadow:0 3px 0 var(--cur,var(--indigo));
+    transition:border-color .35s,box-shadow .35s;
   }
   /* stitch-marker ring */
   .current::before{
     content:"";
     position:absolute;top:-14px;left:26px;
     width:22px;height:22px;
-    border:4px solid var(--mustard);
+    border:4px solid var(--cur,var(--mustard));
     border-radius:50%;
     background:var(--linen);
+    transition:border-color .35s;
   }
   .current .eyebrow{
     font-size:.75rem;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--indigo);
+    text-transform:uppercase;color:var(--cur,var(--indigo));
     margin-bottom:.4rem;
+    transition:color .35s;
   }
   .current .text{
     font-family:'Fraunces',serif;
@@ -102,8 +104,6 @@
     font-weight:500;line-height:1.3;
   }
   .current .hint{font-size:.85rem;color:var(--muted);margin-top:.8rem}
-  .current.all-done{border-color:var(--sage);box-shadow:0 3px 0 var(--sage)}
-  .current.all-done::before{border-color:var(--sage)}
 
   /* ---------- step list ---------- */
   ol{list-style:none}
@@ -144,6 +144,25 @@
     flex-shrink:0;font-family:'Fraunces',serif;font-weight:600;
     color:var(--muted);font-size:.9rem;margin-top:.15rem;min-width:1.4rem;text-align:right;
   }
+
+  /* ---------- completed stack (tucks under the current card) ---------- */
+  .done-list{position:relative;z-index:1;margin-bottom:-12px}
+  .done-list li.step{
+    padding:.45rem .9rem .8rem;   /* extra bottom padding so the card overlap hides nothing */
+    margin-bottom:0;
+    margin-top:.35rem;
+    opacity:.85;
+    align-items:center;
+  }
+  .done-list li.step .label{font-size:.88rem}
+  .done-list li.step .stamp{margin:0 0 0 auto;font-size:.7rem;flex-shrink:0}
+  .done-list li.step .box{width:1.1rem;height:1.1rem;font-size:.75rem;margin-top:0}
+  @keyframes tuck{
+    from{opacity:0;transform:translateY(26px)}
+    to{opacity:.85;transform:none}
+  }
+  .done-list li.newest{animation:tuck .4s ease-out}
+  @media (prefers-reduced-motion:reduce){.done-list li.newest{animation:none}}
 
   /* ---------- commands legend ---------- */
   .legend{margin:1.6rem 0 2rem}
@@ -197,13 +216,15 @@
 
   <p class="status" id="status" role="status" aria-live="polite"></p>
 
+  <ol id="doneList" class="done-list" aria-label="Completed steps"></ol>
+
   <section class="current" id="currentCard" aria-live="polite">
     <p class="eyebrow" id="curEyebrow">Now working</p>
     <p class="text" id="curText"></p>
     <p class="hint">Say <strong>“done”</strong> when you finish this step.</p>
   </section>
 
-  <ol id="stepList"></ol>
+  <ol id="stepList" aria-label="Upcoming steps"></ol>
 
   <section class="legend">
     <h2>Voice commands</h2>
@@ -236,13 +257,13 @@
   /* ---------------- state ---------------- */
   var YARN = ['#D9A21B','#3E5C94','#B4553F','#7A8B5C','#7B5E7B'];
   var DEFAULT_PATTERN = [
-    "Cast on 40 stitches",
-    "Rows 1–4: knit every stitch (garter border)",
-    "Row 5: knit 4, purl to last 4, knit 4",
-    "Row 6: knit all stitches",
-    "Repeat rows 5–6 until piece measures 8 inches",
-    "Final 4 rows: knit every stitch",
-    "Bind off loosely and weave in ends"
+    "Welcome! This page is a hands-free checklist. Tap the “Start listening” button at the top and allow microphone access",
+    "Now say “done” or “next” out loud — this step will tuck itself up under the card above, with a time stamp",
+    "Notice the big card changed color? Each step gets its own yarn color, so a color change means the page heard you and moved on",
+    "Say “undo” to uncheck the last step, or say “read it” to hear your current step out loud",
+    "Prefer quiet? Uncheck “Read each new step aloud” below the voice commands. You can also tap any step to check or uncheck it by hand",
+    "Scroll down to “Edit pattern”, paste in your own pattern — one instruction per line — then tap “Load pattern”",
+    "That's everything! Your progress saves automatically in this browser, so you can close the page mid-project and pick up right where you left off"
   ];
 
   var steps = [];          // {text, done, stamp, color}
@@ -250,6 +271,7 @@
   var recognition = null;
   var lastActionAt = 0;
   var speaking = false;
+  var justCompleted = null;   // index of most recently completed step, for the tuck animation
 
   var els = {
     micBtn: document.getElementById('micBtn'),
@@ -258,6 +280,7 @@
     curCard: document.getElementById('currentCard'),
     curEyebrow: document.getElementById('curEyebrow'),
     curText: document.getElementById('curText'),
+    doneList: document.getElementById('doneList'),
     list: document.getElementById('stepList'),
     input: document.getElementById('patternInput'),
     loadBtn: document.getElementById('loadBtn'),
@@ -325,8 +348,11 @@
   /* ---------------- render ---------------- */
   function render(){
     var cur = currentIndex();
+    var SAGE = '#7A8B5C';
+    var nextColor = (cur === -1) ? SAGE : YARN[cur % YARN.length];
 
-    // current card
+    // current card — tinted in the color the current step will be checked off in
+    els.curCard.style.setProperty('--cur', nextColor);
     if(cur === -1){
       els.curCard.classList.add('all-done');
       els.curEyebrow.textContent = 'Pattern complete';
@@ -337,8 +363,10 @@
       els.curText.textContent = steps[cur].text;
     }
 
-    // list
+    // completed stack (above the card) + upcoming list (below it)
+    els.doneList.innerHTML = '';
     els.list.innerHTML = '';
+
     steps.forEach(function(s, i){
       var li = document.createElement('li');
       li.className = 'step' + (s.done?' done':'') + (i===cur?' active':'');
@@ -358,23 +386,33 @@
       var label = document.createElement('span');
       label.className='label'; label.textContent = s.text;
       body.appendChild(label);
-      if(s.done && s.stamp){
-        var st = document.createElement('span');
-        st.className='stamp';
-        st.style.background = s.color;
-        st.textContent = '✓ ' + s.stamp;
-        body.appendChild(document.createElement('br'));
-        body.appendChild(st);
-      }
 
       li.appendChild(num); li.appendChild(box); li.appendChild(body);
+
+      if(s.done){
+        li.style.borderLeftColor = s.color;
+        if(s.stamp){
+          var st = document.createElement('span');
+          st.className='stamp';
+          st.style.background = s.color;
+          st.textContent = '✓ ' + s.stamp;
+          li.appendChild(st);
+        }
+        if(i === justCompleted) li.classList.add('newest');
+      } else if(i === cur){
+        li.style.borderColor = nextColor;
+        li.style.borderLeftColor = nextColor;
+      }
+
       li.addEventListener('click', function(){ toggleStep(i); });
       li.addEventListener('keydown', function(e){
         if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggleStep(i); }
       });
-      els.list.appendChild(li);
+
+      (s.done ? els.doneList : els.list).appendChild(li);
     });
 
+    justCompleted = null;
     save();
   }
 
@@ -391,6 +429,7 @@
     s.done = true;
     s.stamp = fmtTime(new Date());
     s.color = YARN[i % YARN.length];
+    justCompleted = i;
     render();
     var next = currentIndex();
     if(els.speakToggle.checked){
