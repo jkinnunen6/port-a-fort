@@ -9,25 +9,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,100&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --linen:#F2EEE6;
-    --ink:#2E2A3A;
-    --indigo:#3E5C94;
-    --mustard:#D9A21B;
-    --madder:#B4553F;
-    --sage:#7A8B5C;
-    --plum:#7B5E7B;
-    --card:#FBF9F4;
-    --line:#DDD6C8;
-    --muted:#8A8375;
+    --bg:#F1F2F4;
+    --ink:#23272E;
+    --accent:#3D7EAA;
+    --focus:#C99A2E;
+    --alert:#C05B4D;
+    --card:#FFFFFF;
+    --line:#D9DDE3;
+    --muted:#7B838E;
+    --chipText:#FFFFFF;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{font-size:17px}
   body{
-    background:var(--linen);
+    background:var(--bg);
     color:var(--ink);
     font-family:'Atkinson Hyperlegible',system-ui,sans-serif;
     line-height:1.5;
     padding:1.25rem 1rem 4rem;
+    transition:background .3s,color .3s;
   }
   .wrap{max-width:640px;margin:0 auto}
 
@@ -55,8 +55,8 @@
     cursor:pointer;
     transition:background .2s,color .2s;
   }
-  .mic-btn:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
-  .mic-btn.on{background:var(--madder);border-color:var(--madder);color:#fff}
+  .mic-btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  .mic-btn.on{background:var(--alert);border-color:var(--alert);color:#fff}
   .dot{
     width:.65rem;height:.65rem;border-radius:50%;
     background:var(--muted);
@@ -69,17 +69,17 @@
     font-size:.85rem;color:var(--muted);
     min-height:1.3rem;margin-bottom:1rem;
   }
-  .status.err{color:var(--madder);font-weight:700}
+  .status.err{color:var(--alert);font-weight:700}
 
   /* ---------- current step card ---------- */
   .current{
     position:relative;z-index:2;
     background:var(--card);
-    border:2px solid var(--cur,var(--indigo));
+    border:2px solid var(--cur,var(--accent));
     border-radius:14px;
     padding:1.4rem 1.4rem 1.2rem;
     margin-bottom:2rem;
-    box-shadow:0 3px 0 var(--cur,var(--indigo));
+    box-shadow:0 3px 0 var(--cur,var(--accent));
     transition:border-color .35s,box-shadow .35s;
   }
   /* stitch-marker ring */
@@ -87,14 +87,14 @@
     content:"";
     position:absolute;top:-14px;left:26px;
     width:22px;height:22px;
-    border:4px solid var(--cur,var(--mustard));
+    border:4px solid var(--cur,var(--focus));
     border-radius:50%;
-    background:var(--linen);
+    background:var(--bg);
     transition:border-color .35s;
   }
   .current .eyebrow{
     font-size:.75rem;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--cur,var(--indigo));
+    text-transform:uppercase;color:var(--cur,var(--accent));
     margin-bottom:.4rem;
     transition:color .35s;
   }
@@ -118,15 +118,15 @@
     cursor:pointer;
     transition:border-color .2s,opacity .2s;
   }
-  li.step:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
-  li.step.active{border-color:var(--indigo);border-left-color:var(--indigo);border-width:2px;border-left-width:6px}
+  li.step:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  li.step.active{border-color:var(--accent);border-left-color:var(--accent);border-width:2px;border-left-width:6px}
   li.step.done{opacity:.85}
   li.step .box{
     flex-shrink:0;
     width:1.35rem;height:1.35rem;margin-top:.1rem;
     border:2px solid var(--muted);border-radius:6px;
     display:flex;align-items:center;justify-content:center;
-    font-size:.9rem;color:#fff;font-weight:700;
+    font-size:.9rem;color:var(--chipText,#fff);font-weight:700;
     background:transparent;
   }
   li.step.done .box{border-color:transparent}
@@ -136,7 +136,7 @@
   li.step .stamp{
     display:inline-block;
     font-size:.75rem;font-weight:700;
-    color:#fff;
+    color:var(--chipText,#fff);
     padding:.1rem .5rem;border-radius:999px;
     margin-top:.3rem;
   }
@@ -175,7 +175,7 @@
     border-radius:999px;
     padding:.25rem .7rem;
   }
-  .chip b{color:var(--indigo)}
+  .chip b{color:var(--accent)}
 
   /* ---------- editor ---------- */
   details{margin-top:2rem;border-top:2px dashed var(--line);padding-top:1.2rem}
@@ -197,9 +197,16 @@
     background:var(--card);color:var(--ink);
     padding:.5rem .95rem;cursor:pointer;
   }
-  .btn:focus-visible{outline:3px solid var(--mustard);outline-offset:2px}
-  .btn.primary{background:var(--indigo);border-color:var(--indigo);color:#fff}
-  label.toggle{display:flex;align-items:center;gap:.45rem;font-size:.9rem;margin-top:.9rem;cursor:pointer}
+  .btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  label.toggle{display:flex;align-items:center;gap:.45rem;font-size:.9rem;margin-top:.9rem;cursor:pointer;flex-wrap:wrap}
+  select{
+    font:inherit;font-size:.88rem;
+    background:var(--card);color:var(--ink);
+    border:1px solid var(--line);border-radius:8px;
+    padding:.3rem .5rem;max-width:16rem;
+  }
+  .btn.small{padding:.25rem .7rem;font-size:.8rem}
 </style>
 </head>
 <body>
@@ -237,6 +244,16 @@
       <input type="checkbox" id="speakToggle" checked>
       Read each new step aloud automatically
     </label>
+    <label class="toggle" for="voiceSelect">
+      Voice:
+      <select id="voiceSelect" aria-label="Choose a voice"></select>
+      <button class="btn small" id="voiceTest" type="button">Test</button>
+    </label>
+    <label class="toggle" for="themeSelect">
+      Theme:
+      <select id="themeSelect" aria-label="Choose a color theme"></select>
+    </label>
+    <p class="sub" style="margin-top:.3rem">Voices come from this device, so the list will differ between your computer and phone.</p>
   </section>
 
   <details>
@@ -255,18 +272,53 @@
   "use strict";
 
   /* ---------------- state ---------------- */
-  var YARN = ['#D9A21B','#3E5C94','#B4553F','#7A8B5C','#7B5E7B'];
+  var THEMES = {
+    'Fog': {
+      vars:{'--bg':'#F1F2F4','--ink':'#23272E','--card':'#FFFFFF','--line':'#D9DDE3','--muted':'#7B838E',
+            '--accent':'#3D7EAA','--focus':'#C99A2E','--alert':'#C05B4D','--chipText':'#FFFFFF'},
+      yarn:['#3D7EAA','#C96A50','#4E9B6F','#8A6FB8','#C99A2E']
+    },
+    'Seaglass': {
+      vars:{'--bg':'#E8F0ED','--ink':'#223836','--card':'#F9FCFB','--line':'#C9DAD3','--muted':'#6E837C',
+            '--accent':'#2E7D74','--focus':'#C98A3D','--alert':'#C05B4D','--chipText':'#FFFFFF'},
+      yarn:['#2E7D74','#5B8FBF','#C0716B','#7A9E56','#946FB0']
+    },
+    'Sorbet': {
+      vars:{'--bg':'#FAF0F3','--ink':'#3E2430','--card':'#FFFAFB','--line':'#E8D3DA','--muted':'#97808A',
+            '--accent':'#C64C72','--focus':'#E8944A','--alert':'#A84343','--chipText':'#FFFFFF'},
+      yarn:['#C64C72','#E8944A','#5D9E8F','#7A64B0','#C9A63A']
+    },
+    'Night': {
+      vars:{'--bg':'#1B1D24','--ink':'#E9E7E2','--card':'#262A34','--line':'#3B404D','--muted':'#98A0AD',
+            '--accent':'#6FB7E9','--focus':'#E8C55A','--alert':'#E07856','--chipText':'#1B1D24'},
+      yarn:['#6FB7E9','#F08A6B','#7BC98F','#B79AE8','#E8C55A']
+    }
+  };
+  var currentTheme = 'Fog';
+
+  function yarnColor(i){
+    var y = THEMES[currentTheme].yarn;
+    return y[i % y.length];
+  }
+
+  function applyTheme(name){
+    if(!THEMES[name]) name = 'Fog';
+    currentTheme = name;
+    var vars = THEMES[name].vars;
+    for(var k in vars){ document.documentElement.style.setProperty(k, vars[k]); }
+  }
+
   var DEFAULT_PATTERN = [
     "Welcome! This page is a hands-free checklist. Tap the “Start listening” button at the top and allow microphone access",
     "Now say “done” or “next” out loud — this step will tuck itself up under the card above, with a time stamp",
     "Notice the big card changed color? Each step gets its own yarn color, so a color change means the page heard you and moved on",
     "Say “undo” to uncheck the last step, or say “read it” to hear your current step out loud",
-    "Prefer quiet? Uncheck “Read each new step aloud” below the voice commands. You can also tap any step to check or uncheck it by hand",
+    "Prefer quiet? Uncheck “Read each new step aloud” below the voice commands. You can also tap any step by hand — checking one checks everything before it, and unchecking one unchecks everything after it",
     "Scroll down to “Edit pattern”, paste in your own pattern — one instruction per line — then tap “Load pattern”",
     "That's everything! Your progress saves automatically in this browser, so you can close the page mid-project and pick up right where you left off"
   ];
 
-  var steps = [];          // {text, done, stamp, color}
+  var steps = [];          // {text, done, stamp} — colors derive from the active theme
   var listening = false;
   var recognition = null;
   var lastActionAt = 0;
@@ -285,12 +337,17 @@
     input: document.getElementById('patternInput'),
     loadBtn: document.getElementById('loadBtn'),
     resetBtn: document.getElementById('resetBtn'),
-    speakToggle: document.getElementById('speakToggle')
+    speakToggle: document.getElementById('speakToggle'),
+    voiceSelect: document.getElementById('voiceSelect'),
+    voiceTest: document.getElementById('voiceTest'),
+    themeSelect: document.getElementById('themeSelect')
   };
+
+  var desiredVoice = '';   // saved voice name to re-select once the device reports its voices
 
   function loadPattern(lines){
     steps = lines.filter(function(l){return l.trim().length;})
-      .map(function(l){return {text:l.trim(), done:false, stamp:null, color:null};});
+      .map(function(l){return {text:l.trim(), done:false, stamp:null};});
     render();
   }
 
@@ -308,6 +365,8 @@
         steps: steps,
         patternText: els.input.value,
         speak: els.speakToggle.checked,
+        voice: els.voiceSelect.value || desiredVoice,
+        theme: currentTheme,
         savedAt: Date.now()
       }));
     }catch(e){ /* storage unavailable (private mode / sandboxed preview) — carry on without saving */ }
@@ -323,8 +382,7 @@
         return {
           text: String(s.text || ''),
           done: !!s.done,
-          stamp: s.stamp || null,
-          color: s.color || null
+          stamp: s.stamp || null
         };
       }).filter(function(s){ return s.text.length; });
       if(!steps.length) return false;
@@ -334,6 +392,8 @@
         els.input.value = steps.map(function(s){ return s.text; }).join('\n');
       }
       if(typeof d.speak === 'boolean') els.speakToggle.checked = d.speak;
+      if(typeof d.voice === 'string') desiredVoice = d.voice;
+      if(typeof d.theme === 'string' && THEMES[d.theme]) applyTheme(d.theme);
       return true;
     }catch(e){ return false; }
   }
@@ -348,8 +408,7 @@
   /* ---------------- render ---------------- */
   function render(){
     var cur = currentIndex();
-    var SAGE = '#7A8B5C';
-    var nextColor = (cur === -1) ? SAGE : YARN[cur % YARN.length];
+    var nextColor = (cur === -1) ? THEMES[currentTheme].vars['--accent'] : yarnColor(cur);
 
     // current card — tinted in the color the current step will be checked off in
     els.curCard.style.setProperty('--cur', nextColor);
@@ -379,7 +438,7 @@
 
       var box = document.createElement('span');
       box.className='box';
-      if(s.done){ box.textContent='✓'; box.style.background = s.color; }
+      if(s.done){ box.textContent='✓'; box.style.background = yarnColor(i); }
 
       var body = document.createElement('div');
       body.className='body';
@@ -390,11 +449,11 @@
       li.appendChild(num); li.appendChild(box); li.appendChild(body);
 
       if(s.done){
-        li.style.borderLeftColor = s.color;
+        li.style.borderLeftColor = yarnColor(i);
         if(s.stamp){
           var st = document.createElement('span');
           st.className='stamp';
-          st.style.background = s.color;
+          st.style.background = yarnColor(i);
           st.textContent = '✓ ' + s.stamp;
           li.appendChild(st);
         }
@@ -418,19 +477,28 @@
 
   /* ---------------- actions ---------------- */
   function toggleStep(i){
-    var s = steps[i];
-    if(s.done){ s.done=false; s.stamp=null; s.color=null; }
-    else { markDone(i); return; }
-    render();
+    if(steps[i].done){ uncheckFrom(i); }
+    else { checkThrough(i); }
   }
 
-  function markDone(i){
-    var s = steps[i];
-    s.done = true;
-    s.stamp = fmtTime(new Date());
-    s.color = YARN[i % YARN.length];
+  // Checking a step also checks every step before it, so the pattern
+  // always reads as one contiguous block of completed work.
+  function checkThrough(i){
+    var stamp = fmtTime(new Date());
+    var count = 0;
+    for(var j=0;j<=i;j++){
+      if(!steps[j].done){
+        steps[j].done = true;
+        steps[j].stamp = stamp;
+        count++;
+      }
+    }
+    if(!count) return;
     justCompleted = i;
     render();
+    setStatus(count === 1
+      ? 'Checked step ' + (i+1) + ' at ' + stamp + '.'
+      : 'Checked steps through ' + (i+1) + ' (' + count + ' steps) at ' + stamp + '.');
     var next = currentIndex();
     if(els.speakToggle.checked){
       if(next === -1){
@@ -441,18 +509,35 @@
     }
   }
 
+  // Unchecking a step also unchecks everything after it,
+  // since later steps can't be done if an earlier one isn't.
+  function uncheckFrom(i){
+    var count = 0;
+    for(var j=i;j<steps.length;j++){
+      if(steps[j].done){
+        steps[j].done = false; steps[j].stamp = null;
+        count++;
+      }
+    }
+    if(!count) return;
+    render();
+    setStatus(count === 1
+      ? 'Unchecked step ' + (i+1) + '.'
+      : 'Unchecked ' + count + ' steps — back to step ' + (i+1) + '.');
+    if(els.speakToggle.checked) say('Back to step ' + (i+1) + '.');
+  }
+
   function completeCurrent(){
     var cur = currentIndex();
     if(cur === -1){ setStatus('Everything is already checked off.'); return; }
-    markDone(cur);
-    setStatus('Checked step ' + (cur+1) + ' at ' + steps[cur].stamp + '.');
+    checkThrough(cur);
   }
 
   function undoLast(){
     var lastDone = -1;
     for(var i=steps.length-1;i>=0;i--){ if(steps[i].done){ lastDone=i; break; } }
     if(lastDone === -1){ setStatus('Nothing to undo.'); return; }
-    steps[lastDone].done=false; steps[lastDone].stamp=null; steps[lastDone].color=null;
+    steps[lastDone].done=false; steps[lastDone].stamp=null;
     render();
     setStatus('Unchecked step ' + (lastDone+1) + '.');
     if(els.speakToggle.checked) say('Back to step ' + (lastDone+1) + '.');
@@ -470,6 +555,44 @@
   }
 
   /* ---------------- speech synthesis ---------------- */
+  function populateVoices(){
+    if(!('speechSynthesis' in window)) return;
+    var voices = window.speechSynthesis.getVoices();
+    if(!voices.length) return;
+    // English voices first, then everything else, each group alphabetical
+    voices.sort(function(a,b){
+      var ae = a.lang.indexOf('en')===0 ? 0 : 1;
+      var be = b.lang.indexOf('en')===0 ? 0 : 1;
+      return ae-be || a.name.localeCompare(b.name);
+    });
+    var keep = els.voiceSelect.value || desiredVoice;
+    els.voiceSelect.innerHTML = '';
+    var def = document.createElement('option');
+    def.value = ''; def.textContent = 'Device default';
+    els.voiceSelect.appendChild(def);
+    voices.forEach(function(v){
+      var o = document.createElement('option');
+      o.value = v.name;
+      o.textContent = v.name + ' (' + v.lang + ')';
+      els.voiceSelect.appendChild(o);
+    });
+    // re-select the saved voice if this device has it
+    if(keep){
+      for(var i=0;i<els.voiceSelect.options.length;i++){
+        if(els.voiceSelect.options[i].value === keep){ els.voiceSelect.value = keep; break; }
+      }
+    }
+  }
+
+  function chosenVoice(){
+    if(!('speechSynthesis' in window)) return null;
+    var name = els.voiceSelect.value;
+    if(!name) return null;
+    var voices = window.speechSynthesis.getVoices();
+    for(var i=0;i<voices.length;i++){ if(voices[i].name === name) return voices[i]; }
+    return null;
+  }
+
   function say(text){
     if(!('speechSynthesis' in window)) return;
     // pause recognition so the mic doesn't hear the computer talking
@@ -477,6 +600,8 @@
     if(recognition && listening){ try{ recognition.stop(); }catch(e){} }
     var u = new SpeechSynthesisUtterance(text);
     u.rate = 0.95;
+    var v = chosenVoice();
+    if(v) u.voice = v;
     u.onend = function(){
       speaking = false;
       if(listening) startRecognition();
@@ -563,15 +688,36 @@
     setStatus('Pattern loaded — ' + steps.length + ' steps.');
   });
   els.resetBtn.addEventListener('click', function(){
-    steps.forEach(function(s){ s.done=false; s.stamp=null; s.color=null; });
+    steps.forEach(function(s){ s.done=false; s.stamp=null; });
     render();
     setStatus('Check marks cleared.');
   });
   els.speakToggle.addEventListener('change', save);
   els.input.addEventListener('input', save);
+  els.voiceSelect.addEventListener('change', function(){
+    desiredVoice = els.voiceSelect.value;
+    save();
+  });
+  els.voiceTest.addEventListener('click', function(){
+    say('This is how I will read your pattern. Step 1: cast on 40 stitches.');
+  });
+  Object.keys(THEMES).forEach(function(name){
+    var o = document.createElement('option');
+    o.value = name; o.textContent = name;
+    els.themeSelect.appendChild(o);
+  });
+  els.themeSelect.addEventListener('change', function(){
+    applyTheme(els.themeSelect.value);
+    render();   // repaint yarn chips, stamps, and the card in the new palette
+  });
+  if('speechSynthesis' in window){
+    populateVoices();
+    window.speechSynthesis.onvoiceschanged = populateVoices;
+  }
 
   /* ---------------- boot ---------------- */
   if(restore()){
+    els.themeSelect.value = currentTheme;
     render();
     var cur = currentIndex();
     if(cur === -1){
