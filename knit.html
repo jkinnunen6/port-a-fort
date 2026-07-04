@@ -275,6 +275,45 @@
     return -1;
   }
 
+  /* ---------------- persistence ---------------- */
+  var STORAGE_KEY = 'rowByRow_v1';
+
+  function save(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        steps: steps,
+        patternText: els.input.value,
+        speak: els.speakToggle.checked,
+        savedAt: Date.now()
+      }));
+    }catch(e){ /* storage unavailable (private mode / sandboxed preview) — carry on without saving */ }
+  }
+
+  function restore(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return false;
+      var d = JSON.parse(raw);
+      if(!d || !Array.isArray(d.steps) || !d.steps.length) return false;
+      steps = d.steps.map(function(s){
+        return {
+          text: String(s.text || ''),
+          done: !!s.done,
+          stamp: s.stamp || null,
+          color: s.color || null
+        };
+      }).filter(function(s){ return s.text.length; });
+      if(!steps.length) return false;
+      if(typeof d.patternText === 'string' && d.patternText.trim().length){
+        els.input.value = d.patternText;
+      } else {
+        els.input.value = steps.map(function(s){ return s.text; }).join('\n');
+      }
+      if(typeof d.speak === 'boolean') els.speakToggle.checked = d.speak;
+      return true;
+    }catch(e){ return false; }
+  }
+
   function fmtTime(d){
     var h=d.getHours(), m=d.getMinutes();
     var ap = h>=12 ? 'pm':'am';
@@ -334,6 +373,8 @@
       });
       els.list.appendChild(li);
     });
+
+    save();
   }
 
   /* ---------------- actions ---------------- */
@@ -486,10 +527,24 @@
     render();
     setStatus('Check marks cleared.');
   });
+  els.speakToggle.addEventListener('change', save);
+  els.input.addEventListener('input', save);
 
   /* ---------------- boot ---------------- */
-  els.input.value = DEFAULT_PATTERN.join('\n');
-  loadPattern(DEFAULT_PATTERN);
+  if(restore()){
+    render();
+    var cur = currentIndex();
+    if(cur === -1){
+      setStatus('Welcome back — this pattern is fully checked off.');
+    } else {
+      var doneCount = steps.filter(function(s){ return s.done; }).length;
+      setStatus('Welcome back — resumed at step ' + (cur+1) + ' of ' + steps.length +
+        (doneCount ? ' (' + doneCount + ' done so far).' : '.'));
+    }
+  } else {
+    els.input.value = DEFAULT_PATTERN.join('\n');
+    loadPattern(DEFAULT_PATTERN);
+  }
 })();
 </script>
 </body>
