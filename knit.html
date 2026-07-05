@@ -64,6 +64,9 @@
   .mic-btn.on .dot{background:#fff;animation:pulse 1.4s ease-in-out infinite}
   @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.5}}
   @media (prefers-reduced-motion:reduce){.mic-btn.on .dot{animation:none}}
+  .btns{display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0}
+  .mic-btn.tv{font-size:.8rem;padding:.4rem .8rem}
+  .mic-btn.tv.on{background:var(--accent);border-color:var(--accent);color:#fff}
 
   .status{
     font-size:.85rem;color:var(--muted);
@@ -200,7 +203,7 @@
   .btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
   .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
   label.toggle{display:flex;align-items:center;gap:.45rem;font-size:.9rem;margin-top:.9rem;cursor:pointer;flex-wrap:wrap}
-  select{
+  select, input[type="text"]{
     font:inherit;font-size:.88rem;
     background:var(--card);color:var(--ink);
     border:1px solid var(--line);border-radius:8px;
@@ -216,9 +219,14 @@
       <h1>Row by Row</h1>
       <p class="sub">A hands-free pattern checklist</p>
     </div>
-    <button class="mic-btn" id="micBtn" aria-pressed="false">
-      <span class="dot"></span><span id="micLabel">Start listening</span>
-    </button>
+    <div class="btns">
+      <button class="mic-btn" id="micBtn" aria-pressed="false">
+        <span class="dot"></span><span id="micLabel">Start listening</span>
+      </button>
+      <button class="mic-btn tv" id="tvBtn" aria-pressed="false">
+        <span id="tvLabel">TV mode off</span>
+      </button>
+    </div>
   </header>
 
   <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -228,7 +236,7 @@
   <section class="current" id="currentCard" aria-live="polite">
     <p class="eyebrow" id="curEyebrow">Now working</p>
     <p class="text" id="curText"></p>
-    <p class="hint">Say <strong>“done”</strong> when you finish this step.</p>
+    <p class="hint" id="cardHint">Say <strong>“done”</strong> when you finish this step.</p>
   </section>
 
   <ol id="stepList" aria-label="Upcoming steps"></ol>
@@ -240,6 +248,10 @@
       <span class="chip"><b>“undo”</b> / “go back” — uncheck last step</span>
       <span class="chip"><b>“read it”</b> / “repeat” — hear the current step aloud</span>
     </div>
+    <p class="sub" style="margin-top:.8rem">Knitting in front of the TV? Turn on <strong>TV mode</strong> (top right) and only these code words will work — they're long, distinctive words that almost never come up in dialogue:</p>
+    <label class="toggle">Check step: <input type="text" id="cwDone" size="12"></label>
+    <label class="toggle">Uncheck: <input type="text" id="cwUndo" size="12"></label>
+    <label class="toggle">Read aloud: <input type="text" id="cwRead" size="12"></label>
     <label class="toggle">
       <input type="checkbox" id="speakToggle" checked>
       Read each new step aloud automatically
@@ -324,10 +336,18 @@
   var lastActionAt = 0;
   var speaking = false;
   var justCompleted = null;   // index of most recently completed step, for the tuck animation
+  var tvMode = false;
+  var codeWords = { done:'bumblebee', undo:'grasshopper', read:'flamingo' };
 
   var els = {
     micBtn: document.getElementById('micBtn'),
     micLabel: document.getElementById('micLabel'),
+    tvBtn: document.getElementById('tvBtn'),
+    tvLabel: document.getElementById('tvLabel'),
+    cardHint: document.getElementById('cardHint'),
+    cwDone: document.getElementById('cwDone'),
+    cwUndo: document.getElementById('cwUndo'),
+    cwRead: document.getElementById('cwRead'),
     status: document.getElementById('status'),
     curCard: document.getElementById('currentCard'),
     curEyebrow: document.getElementById('curEyebrow'),
@@ -367,6 +387,8 @@
         speak: els.speakToggle.checked,
         voice: els.voiceSelect.value || desiredVoice,
         theme: currentTheme,
+        tvMode: tvMode,
+        codeWords: codeWords,
         savedAt: Date.now()
       }));
     }catch(e){ /* storage unavailable (private mode / sandboxed preview) — carry on without saving */ }
@@ -394,6 +416,12 @@
       if(typeof d.speak === 'boolean') els.speakToggle.checked = d.speak;
       if(typeof d.voice === 'string') desiredVoice = d.voice;
       if(typeof d.theme === 'string' && THEMES[d.theme]) applyTheme(d.theme);
+      if(typeof d.tvMode === 'boolean') tvMode = d.tvMode;
+      if(d.codeWords && typeof d.codeWords === 'object'){
+        ['done','undo','read'].forEach(function(k){
+          if(typeof d.codeWords[k] === 'string' && d.codeWords[k].trim()) codeWords[k] = d.codeWords[k].trim();
+        });
+      }
       return true;
     }catch(e){ return false; }
   }
@@ -646,9 +674,24 @@
     };
   }
 
+  // squash to letters only, so "bumble bee" and "Bumblebee!" both match "bumblebee"
+  function squash(str){ return String(str).toLowerCase().replace(/[^a-z]/g,''); }
+
   function handleCommand(t){
     var now = Date.now();
     if(now - lastActionAt < 1500) return;   // debounce echoes
+
+    if(tvMode){
+      var flat = squash(t);
+      if(codeWords.done && flat.indexOf(squash(codeWords.done)) !== -1){
+        lastActionAt = now; completeCurrent();
+      } else if(codeWords.undo && flat.indexOf(squash(codeWords.undo)) !== -1){
+        lastActionAt = now; undoLast();
+      } else if(codeWords.read && flat.indexOf(squash(codeWords.read)) !== -1){
+        lastActionAt = now; readCurrent();
+      }
+      return;   // in TV mode, everything else — including "done" and "next" — is ignored
+    }
 
     if(/\b(done|next|finished|finish|complete|completed|check)\b/.test(t)){
       lastActionAt = now; completeCurrent();
@@ -657,6 +700,23 @@
     } else if(/\b(read|repeat|where am i|again)\b/.test(t)){
       lastActionAt = now; readCurrent();
     }
+  }
+
+  function updateHint(){
+    var word = tvMode ? codeWords.done : 'done';
+    els.cardHint.innerHTML = '';
+    els.cardHint.appendChild(document.createTextNode(tvMode ? 'TV mode \u2014 say ' : 'Say '));
+    var b = document.createElement('strong');
+    b.textContent = '\u201C' + word + '\u201D';
+    els.cardHint.appendChild(b);
+    els.cardHint.appendChild(document.createTextNode(' when you finish this step.'));
+  }
+
+  function updateTvUI(){
+    els.tvBtn.classList.toggle('on', tvMode);
+    els.tvBtn.setAttribute('aria-pressed', tvMode ? 'true':'false');
+    els.tvLabel.textContent = tvMode ? 'TV mode on' : 'TV mode off';
+    updateHint();
   }
 
   function updateMicUI(){
@@ -710,6 +770,26 @@
     applyTheme(els.themeSelect.value);
     render();   // repaint yarn chips, stamps, and the card in the new palette
   });
+  els.tvBtn.addEventListener('click', function(){
+    tvMode = !tvMode;
+    updateTvUI();
+    setStatus(tvMode
+      ? 'TV mode on — only the code words work now: “' + codeWords.done + '” to check, “' + codeWords.undo + '” to uncheck, “' + codeWords.read + '” to read aloud.'
+      : 'TV mode off — normal commands (“done”, “undo”, “read it”) are back.');
+    save();
+  });
+  function bindCodeWord(input, key){
+    input.value = codeWords[key];
+    input.addEventListener('input', function(){
+      var v = input.value.trim();
+      if(v) codeWords[key] = v;
+      updateHint();
+      save();
+    });
+  }
+  bindCodeWord(els.cwDone, 'done');
+  bindCodeWord(els.cwUndo, 'undo');
+  bindCodeWord(els.cwRead, 'read');
   if('speechSynthesis' in window){
     populateVoices();
     window.speechSynthesis.onvoiceschanged = populateVoices;
@@ -718,6 +798,10 @@
   /* ---------------- boot ---------------- */
   if(restore()){
     els.themeSelect.value = currentTheme;
+    els.cwDone.value = codeWords.done;
+    els.cwUndo.value = codeWords.undo;
+    els.cwRead.value = codeWords.read;
+    updateTvUI();
     render();
     var cur = currentIndex();
     if(cur === -1){
@@ -729,6 +813,7 @@
     }
   } else {
     els.input.value = DEFAULT_PATTERN.join('\n');
+    updateTvUI();
     loadPattern(DEFAULT_PATTERN);
   }
 })();
