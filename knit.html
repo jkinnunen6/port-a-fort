@@ -212,6 +212,8 @@
   }
   .btn.small{padding:.25rem .7rem;font-size:.8rem}
   .custom-panel{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:.7rem}
+  .custom-panel[hidden]{display:none}
+  .cheer{font-size:.74rem;color:var(--accent);margin-left:.5rem;font-weight:700}
   .custom-panel label{
     display:flex;flex-direction:column;align-items:center;gap:.2rem;
     font-size:.72rem;color:var(--muted);cursor:pointer;
@@ -277,10 +279,12 @@
       <select id="voiceSelect" aria-label="Choose a voice"></select>
       <button class="btn small" id="voiceTest" type="button">Test</button>
     </label>
+    <p class="sub" style="margin-top:.3rem">Voices come from this device, so the list will differ between your computer and phone.</p>
     <label class="toggle" for="themeSelect">
       Theme:
       <select id="themeSelect" aria-label="Choose a color theme"></select>
     </label>
+    <button class="btn small" id="rerollBtn" type="button" hidden>↻ Re-roll random</button>
     <div id="customPanel" class="custom-panel" hidden>
       <label>Background <input type="color" id="ccBg"></label>
       <label>Card <input type="color" id="ccCard"></label>
@@ -292,7 +296,6 @@
       <label>Yarn 4 <input type="color" id="ccY3"></label>
       <label>Yarn 5 <input type="color" id="ccY4"></label>
     </div>
-    <p class="sub" style="margin-top:.3rem">Voices come from this device, so the list will differ between your computer and phone.</p>
   </section>
 
   <details>
@@ -393,6 +396,41 @@
   }
   rebuildCustomTheme();   // so 'Custom' exists when the dropdown is populated
 
+  /* ---- random theme: rolled fresh each time it's picked ---- */
+  function rnd(a, b){ return a + Math.random()*(b-a); }
+  function hslToHex(h, sat, light){
+    sat/=100; light/=100;
+    var c=(1-Math.abs(2*light-1))*sat;
+    var x=c*(1-Math.abs(((h/60)%2)-1));
+    var m=light-c/2;
+    var r=0,g=0,b=0;
+    if(h<60){r=c;g=x;} else if(h<120){r=x;g=c;} else if(h<180){g=c;b=x;}
+    else if(h<240){g=x;b=c;} else if(h<300){r=x;b=c;} else {r=c;b=x;}
+    return rgbToHex([(r+m)*255,(g+m)*255,(b+m)*255]);
+  }
+  function rollRandomTheme(){
+    // truly random hues; only lightness is constrained so text stays readable
+    var dark = Math.random() < 0.35;
+    var bgHue = rnd(0,360);
+    var bg   = dark ? hslToHex(bgHue, rnd(12,40), rnd(8,15))  : hslToHex(bgHue, rnd(15,55), rnd(88,96));
+    var card = dark ? hslToHex(bgHue, rnd(12,40), rnd(15,22)) : hslToHex(bgHue, rnd(10,45), rnd(96,100));
+    var ink  = dark ? hslToHex(rnd(0,360), rnd(5,30), rnd(88,95)) : hslToHex(rnd(0,360), rnd(15,60), rnd(8,22));
+    var accent = hslToHex(rnd(0,360), rnd(45,90), dark ? rnd(55,75) : rnd(28,52));
+    var yarn = [];
+    for(var i=0;i<5;i++){
+      yarn.push(hslToHex(rnd(0,360), rnd(40,90), dark ? rnd(55,78) : rnd(30,60)));
+    }
+    var avg = yarn.reduce(function(t,y){ return t + lum(y); }, 0) / yarn.length;
+    THEMES['Random'] = {
+      vars:{'--bg':bg, '--ink':ink, '--card':card,
+            '--line':mixHex(bg, ink, 0.18), '--muted':mixHex(bg, ink, 0.55),
+            '--accent':accent, '--focus':accent, '--alert':'#C0564D',
+            '--chipText': avg > 0.62 ? '#22242A' : '#FFFFFF'},
+      yarn:yarn
+    };
+  }
+  rollRandomTheme();   // so 'Random' exists in the dropdown from the start
+
   var DEFAULT_PATTERN = [
     "Welcome! This page is a hands-free checklist. Tap the “Start listening” button at the top and allow microphone access",
     "Now say “done” or “next” out loud — this step will tuck itself up under the card above, with a time stamp",
@@ -410,6 +448,11 @@
   var speaking = false;
   var justCompleted = null;   // index of most recently completed step, for the tuck animation
   var tvMode = false;
+  var KAOMOJI = ['(ノ◕ヮ◕)ノ*:・ﾟ✧','(◕‿◕)','ᕕ( Მ )ᕗ','(｡♥‿♥｡)','♪(´▽｀)','ヽ(・∀・)ﾉ','(๑˃ᴗ˂)ﻭ','٩(◕‿◕)۶','(ﾉ≧∀≦)ﾉ','(❁´◡`❁)','( ˘ ³˘)♥','✧(≖ ◡ ≖)'];
+  var CHEERS = ['nice stitch!','you\'re on a roll!','purl power!','look at you go!','yarn magic!','row by row!','so cozy!','keep it up!','beautiful work!','one step closer!','smooth as merino!','clickety-clack!','stitch perfect!','cozy vibes!'];
+  function pickCheer(){
+    return KAOMOJI[Math.floor(Math.random()*KAOMOJI.length)] + ' ' + CHEERS[Math.floor(Math.random()*CHEERS.length)];
+  }
   var codeWords = { done:'bumblebee', undo:'grasshopper', read:'flamingo' };
 
   var els = {
@@ -461,6 +504,7 @@
         voice: els.voiceSelect.value || desiredVoice,
         theme: currentTheme,
         customColors: customColors,
+        randomTheme: THEMES['Random'] || null,
         tvMode: tvMode,
         codeWords: codeWords,
         savedAt: Date.now()
@@ -478,7 +522,8 @@
         return {
           text: String(s.text || ''),
           done: !!s.done,
-          stamp: s.stamp || null
+          stamp: s.stamp || null,
+          cheer: (typeof s.cheer === 'string') ? s.cheer : null
         };
       }).filter(function(s){ return s.text.length; });
       if(!steps.length) return false;
@@ -500,6 +545,9 @@
           });
         }
         rebuildCustomTheme();
+      }
+      if(d.randomTheme && d.randomTheme.vars && Array.isArray(d.randomTheme.yarn)){
+        THEMES['Random'] = d.randomTheme;
       }
       if(typeof d.theme === 'string' && THEMES[d.theme]) applyTheme(d.theme);
       if(typeof d.tvMode === 'boolean') tvMode = d.tvMode;
@@ -564,6 +612,12 @@
 
       if(s.done){
         li.style.borderLeftColor = yarnColor(i);
+        if(s.cheer){
+          var ch = document.createElement('span');
+          ch.className = 'cheer';
+          ch.textContent = s.cheer;
+          body.appendChild(ch);
+        }
         if(s.stamp){
           var st = document.createElement('span');
           st.className='stamp';
@@ -604,6 +658,7 @@
       if(!steps[j].done){
         steps[j].done = true;
         steps[j].stamp = stamp;
+        steps[j].cheer = pickCheer();
         count++;
       }
     }
@@ -630,7 +685,7 @@
     var count = 0;
     for(var j=i;j<steps.length;j++){
       if(steps[j].done){
-        steps[j].done = false; steps[j].stamp = null;
+        steps[j].done = false; steps[j].stamp = null; steps[j].cheer = null;
         count++;
       }
     }
@@ -653,7 +708,7 @@
     var lastDone = -1;
     for(var i=steps.length-1;i>=0;i--){ if(steps[i].done){ lastDone=i; break; } }
     if(lastDone === -1){ setStatus('Nothing to undo.'); return; }
-    steps[lastDone].done=false; steps[lastDone].stamp=null;
+    steps[lastDone].done=false; steps[lastDone].stamp=null; steps[lastDone].cheer=null;
     render();
     setStatus('Unchecked step ' + (lastDone+1) + '.');
     if(els.speakToggle.checked) say('Back to step ' + (lastDone+1) + '.');
@@ -896,7 +951,7 @@
     setStatus('Pattern loaded — ' + steps.length + ' steps.');
   });
   els.resetBtn.addEventListener('click', function(){
-    steps.forEach(function(s){ s.done=false; s.stamp=null; });
+    steps.forEach(function(s){ s.done=false; s.stamp=null; s.cheer=null; });
     render();
     setStatus('Check marks cleared.');
   });
@@ -915,9 +970,28 @@
     els.themeSelect.appendChild(o);
   });
   els.themeSelect.addEventListener('change', function(){
-    applyTheme(els.themeSelect.value);
+    var name = els.themeSelect.value;
+    if(name === 'Custom' && currentTheme !== 'Custom'){
+      // seed the pickers with the theme you're coming from
+      var t = THEMES[currentTheme];
+      customColors.bg = t.vars['--bg'];
+      customColors.card = t.vars['--card'];
+      customColors.ink = t.vars['--ink'];
+      customColors.accent = t.vars['--accent'];
+      customColors.yarn = t.yarn.slice();
+      rebuildCustomTheme();
+      syncCustomInputs();
+    }
+    if(name === 'Random') rollRandomTheme();   // fresh roll every time it's picked
+    applyTheme(name);
     document.getElementById('customPanel').hidden = (currentTheme !== 'Custom');
+    document.getElementById('rerollBtn').hidden = (currentTheme !== 'Random');
     render();   // repaint yarn chips, stamps, and the card in the new palette
+  });
+  document.getElementById('rerollBtn').addEventListener('click', function(){
+    rollRandomTheme();
+    applyTheme('Random');
+    render();
   });
 
   /* custom theme color pickers */
@@ -993,6 +1067,7 @@
   }
   syncCustomInputs();
   document.getElementById('customPanel').hidden = (currentTheme !== 'Custom');
+  document.getElementById('rerollBtn').hidden = (currentTheme !== 'Random');
 })();
 </script>
 </body>
