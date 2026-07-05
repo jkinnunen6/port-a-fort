@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Row by Row — Voice Knitting Checklist</title>
+<title>Woolgathering — Voice Knitting Checklist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,100&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -234,7 +234,7 @@
 <div class="wrap">
   <header>
     <div>
-      <h1>Row by Row</h1>
+      <h1>Woolgathering</h1>
       <p class="sub">A hands-free pattern checklist</p>
     </div>
     <div class="btns">
@@ -249,15 +249,17 @@
 
   <p class="status" id="status" role="status" aria-live="polite"></p>
 
-  <ol id="doneList" class="done-list" aria-label="Completed steps"></ol>
+  <div class="board">
+    <ol id="doneList" class="done-list" aria-label="Completed steps"></ol>
 
-  <section class="current" id="currentCard" aria-live="polite">
-    <p class="eyebrow" id="curEyebrow">Now working</p>
-    <p class="text" id="curText"></p>
-    <p class="hint" id="cardHint">Say <strong>“done”</strong> when you finish this step.</p>
-  </section>
+    <section class="current" id="currentCard" aria-live="polite">
+      <p class="eyebrow" id="curEyebrow">Now working</p>
+      <p class="text" id="curText"></p>
+      <p class="hint" id="cardHint">Say <strong>“done”</strong> when you finish this step.</p>
+    </section>
 
-  <ol id="stepList" aria-label="Upcoming steps"></ol>
+    <ol id="stepList" aria-label="Upcoming steps"></ol>
+  </div>
 
   <section class="legend">
     <h2>Voice commands</h2>
@@ -305,6 +307,7 @@
     <div class="row">
       <button class="btn primary" id="loadBtn">Load pattern</button>
       <button class="btn" id="resetBtn">Reset check marks</button>
+      <button class="btn" id="tutorialBtn">Show tutorial</button>
     </div>
   </details>
 
@@ -432,13 +435,14 @@
   rollRandomTheme();   // so 'Random' exists in the dropdown from the start
 
   var DEFAULT_PATTERN = [
-    "Welcome! This page is a hands-free checklist. Tap the “Start listening” button at the top and allow microphone access",
-    "Now say “done” or “next” out loud — this step will tuck itself up under the card above, with a time stamp",
-    "Notice the big card changed color? Each step gets its own yarn color, so a color change means the page heard you and moved on",
+    "Welcome to Woolgathering! This is a hands-free checklist. Tap “Start listening” at the top and allow microphone access",
+    "Now say “done” or “next” out loud — this step will tuck itself up under the card, with a time stamp and a little cheer",
+    "Notice the card changed color? The yarn colors rotate as you work, so a fresh color means the page heard you and moved to a new step",
     "Say “undo” to uncheck the last step, or say “read it” to hear your current step out loud",
-    "Prefer quiet? Uncheck “Read each new step aloud” below the voice commands. You can also tap any step by hand — checking one checks everything before it, and unchecking one unchecks everything after it",
-    "Scroll down to “Edit pattern”, paste in your own pattern — one instruction per line — then tap “Load pattern”",
-    "That's everything! Your progress saves automatically in this browser, so you can close the page mid-project and pick up right where you left off"
+    "Knitting near a chatty TV? Tap “TV mode” (top right) and only three distinctive code words will work — you can customize them below",
+    "Make it yours: pick a theme below, build a Custom one, or roll a Random palette. Prefer quiet? Uncheck “Read each new step aloud”",
+    "You can also tap any step by hand — checking one checks everything before it, and unchecking one unchecks everything after it",
+    "Scroll down to “Edit pattern”, paste in your own pattern — one instruction per line — and tap “Load pattern”. Progress saves automatically in this browser, and “Show tutorial” brings these instructions back anytime"
   ];
 
   var steps = [];          // {text, done, stamp} — colors derive from the active theme
@@ -493,7 +497,7 @@
   }
 
   /* ---------------- persistence ---------------- */
-  var STORAGE_KEY = 'rowByRow_v1';
+  var STORAGE_KEY = 'woolgathering_v1';
 
   function save(){
     try{
@@ -949,6 +953,11 @@
   els.loadBtn.addEventListener('click', function(){
     loadPattern(els.input.value.split('\n'));
     setStatus('Pattern loaded — ' + steps.length + ' steps.');
+  });
+  document.getElementById('tutorialBtn').addEventListener('click', function(){
+    els.input.value = DEFAULT_PATTERN.join('\n');
+    loadPattern(DEFAULT_PATTERN);
+    setStatus('Tutorial loaded — paste your pattern back into “Edit pattern” whenever you\u2019re ready.');
   });
   els.resetBtn.addEventListener('click', function(){
     steps.forEach(function(s){ s.done=false; s.stamp=null; s.cheer=null; });
