@@ -33,7 +33,10 @@
   .wrap{max-width:640px;margin:0 auto}
 
   /* ---------- header ---------- */
-  header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.5rem}
+  header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+  @media (max-width:560px){
+    .btns{flex-direction:row;align-items:center;width:100%;justify-content:flex-start}
+  }
   h1{
     font-family:'Fraunces',serif;
     font-weight:600;
@@ -281,6 +284,10 @@
       <input type="checkbox" id="speakToggle" checked>
       Read each new step aloud automatically
     </label>
+    <label class="toggle">
+      <input type="checkbox" id="awakeToggle" checked>
+      Keep the screen awake while listening (handy on phones, uses more battery)
+    </label>
     <label class="toggle" for="voiceSelect">
       Voice:
       <select id="voiceSelect" aria-label="Choose a voice"></select>
@@ -457,6 +464,7 @@
   var speaking = false;
   var justCompleted = null;   // index of most recently completed step, for the tuck animation
   var tvMode = false;
+  var keepAwake = true;   // hold a screen wake lock while listening (user toggle)
   var KAOMOJI = ['(ノ◕ヮ◕)ノ*:・ﾟ✧','(◕‿◕)','ᕕ( Მ )ᕗ','(｡♥‿♥｡)','♪(´▽｀)','ヽ(・∀・)ﾉ','(๑˃ᴗ˂)ﻭ','٩(◕‿◕)۶','(ﾉ≧∀≦)ﾉ','(❁´◡`❁)','( ˘ ³˘)♥','✧(≖ ◡ ≖)'];
   var CHEERS = ['nice stitch!','you\'re on a roll!','purl power!','look at you go!','yarn magic!','row by row!','so cozy!','keep it up!','beautiful work!','one step closer!','smooth as merino!','clickety-clack!','stitch perfect!','cozy vibes!'];
   function pickCheer(){
@@ -510,6 +518,7 @@
         steps: steps,
         patternText: els.input.value,
         speak: els.speakToggle.checked,
+        keepAwake: keepAwake,
         voice: els.voiceSelect.value || desiredVoice,
         theme: currentTheme,
         customColors: customColors,
@@ -542,6 +551,7 @@
         els.input.value = steps.map(function(s){ return s.text; }).join('\n');
       }
       if(typeof d.speak === 'boolean') els.speakToggle.checked = d.speak;
+      if(typeof d.keepAwake === 'boolean') keepAwake = d.keepAwake;
       if(typeof d.voice === 'string') desiredVoice = d.voice;
       var HEX = /^#[0-9a-fA-F]{6}$/;
       if(d.customColors && typeof d.customColors === 'object'){
@@ -810,7 +820,7 @@
   /* ---------------- screen wake lock ---------------- */
   var wakeLock = null;
   function acquireWakeLock(){
-    if(!('wakeLock' in navigator)) return;
+    if(!keepAwake || !('wakeLock' in navigator)) return;
     navigator.wakeLock.request('screen').then(function(wl){
       wakeLock = wl;
     }).catch(function(){ /* low battery or unsupported — screen may still time out */ });
@@ -978,6 +988,12 @@
     setStatus('Check marks cleared.');
   });
   els.speakToggle.addEventListener('change', save);
+  document.getElementById('awakeToggle').addEventListener('change', function(e){
+    keepAwake = e.target.checked;
+    if(!keepAwake){ releaseWakeLock(); }
+    else if(listening && document.visibilityState === 'visible'){ acquireWakeLock(); }
+    save();
+  });
   els.input.addEventListener('input', save);
   els.voiceSelect.addEventListener('change', function(){
     desiredVoice = els.voiceSelect.value;
@@ -1088,6 +1104,7 @@
     loadPattern(DEFAULT_PATTERN);
   }
   syncCustomInputs();
+  document.getElementById('awakeToggle').checked = keepAwake;
   document.getElementById('customPanel').hidden = (currentTheme !== 'Custom');
   document.getElementById('rerollBtn').hidden = (currentTheme !== 'Random');
 })();
