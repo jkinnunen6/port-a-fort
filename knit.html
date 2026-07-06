@@ -28,6 +28,7 @@
     line-height:1.5;
     padding:1.25rem 1rem 4rem;
     transition:background .3s,color .3s;
+    overflow-x:hidden;
   }
   .wrap{max-width:640px;margin:0 auto}
 
@@ -135,7 +136,7 @@
   }
   li.step.done .box{border-color:transparent}
   li.step .body{flex:1}
-  li.step .label{font-size:1rem}
+  li.step .label{font-size:1rem;overflow-wrap:anywhere}
   li.step.done .label{text-decoration:line-through;text-decoration-thickness:2px}
   li.step .stamp{
     display:inline-block;
@@ -157,7 +158,11 @@
     margin-top:.35rem;
     opacity:.85;
     align-items:center;
+    flex-wrap:wrap;   /* on narrow screens the cheer + stamp drop to their own line */
   }
+  .done-list li.step .body{flex:1 1 9rem}
+  .done-list li.step .cheer{margin-left:auto;white-space:nowrap}
+  .done-list li.step .cheer ~ .stamp{margin-left:0}
   .done-list li.step .label{font-size:.88rem}
   .done-list li.step .stamp{margin:0 0 0 auto;font-size:.7rem;flex-shrink:0}
   .done-list li.step .box{width:1.1rem;height:1.1rem;font-size:.75rem;margin-top:0}
@@ -213,7 +218,7 @@
   .btn.small{padding:.25rem .7rem;font-size:.8rem}
   .custom-panel{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:.7rem}
   .custom-panel[hidden]{display:none}
-  .cheer{font-size:.74rem;color:var(--accent);margin:0 .45rem 0 .5rem;font-weight:700;flex-shrink:0;text-align:right}
+  .cheer{font-size:.74rem;color:var(--accent);margin:0 .45rem 0 .5rem;font-weight:700;text-align:right}
   .custom-panel label{
     display:flex;flex-direction:column;align-items:center;gap:.2rem;
     font-size:.72rem;color:var(--muted);cursor:pointer;
@@ -649,13 +654,21 @@
 
   /* ---------------- actions ---------------- */
   function toggleStep(i){
-    if(steps[i].done){ uncheckFrom(i); }
-    else { checkThrough(i); }
+    var j, count = 0;
+    if(steps[i].done){
+      for(j=i;j<steps.length;j++){ if(steps[j].done) count++; }
+      if(count >= 4 && !window.confirm('Uncheck ' + count + ' steps and go back to step ' + (i+1) + '?')) return;
+      uncheckFrom(i, true);
+    } else {
+      for(j=0;j<=i;j++){ if(!steps[j].done) count++; }
+      if(count >= 4 && !window.confirm('Check off ' + count + ' steps, through step ' + (i+1) + '?')) return;
+      checkThrough(i, true);
+    }
   }
 
   // Checking a step also checks every step before it, so the pattern
   // always reads as one contiguous block of completed work.
-  function checkThrough(i){
+  function checkThrough(i, instant){
     var stamp = fmtTime(new Date());
     var count = 0;
     for(var j=0;j<=i;j++){
@@ -669,7 +682,7 @@
     if(!count) return;
     justCompleted = i;
     render();
-    scrollCardIntoView();
+    scrollCardIntoView(instant);
     setStatus(count === 1
       ? 'Checked step ' + (i+1) + ' at ' + stamp + '.'
       : 'Checked steps through ' + (i+1) + ' (' + count + ' steps) at ' + stamp + '.');
@@ -685,7 +698,7 @@
 
   // Unchecking a step also unchecks everything after it,
   // since later steps can't be done if an earlier one isn't.
-  function uncheckFrom(i){
+  function uncheckFrom(i, instant){
     var count = 0;
     for(var j=i;j<steps.length;j++){
       if(steps[j].done){
@@ -695,7 +708,7 @@
     }
     if(!count) return;
     render();
-    scrollCardIntoView();
+    scrollCardIntoView(instant);
     setStatus(count === 1
       ? 'Unchecked step ' + (i+1) + '.'
       : 'Unchecked ' + count + ' steps — back to step ' + (i+1) + '.');
@@ -731,10 +744,10 @@
 
   // Keep the "Now working" card pinned to its spot near the top of the screen --
   // completed steps scroll away above it, upcoming steps queue below.
-  function scrollCardIntoView(){
+  function scrollCardIntoView(instant){
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setTimeout(function(){
-      els.curCard.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      els.curCard.scrollIntoView({ behavior: (instant || reduce) ? 'auto' : 'smooth', block: 'start' });
     }, 60);
   }
 
