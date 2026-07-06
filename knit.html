@@ -658,11 +658,11 @@
     if(steps[i].done){
       for(j=i;j<steps.length;j++){ if(steps[j].done) count++; }
       if(count >= 4 && !window.confirm('Uncheck ' + count + ' steps and go back to step ' + (i+1) + '?')) return;
-      uncheckFrom(i, true);
+      uncheckFrom(i);
     } else {
       for(j=0;j<=i;j++){ if(!steps[j].done) count++; }
       if(count >= 4 && !window.confirm('Check off ' + count + ' steps, through step ' + (i+1) + '?')) return;
-      checkThrough(i, true);
+      checkThrough(i);
     }
   }
 
