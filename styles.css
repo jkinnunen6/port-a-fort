@@ -1381,7 +1381,7 @@ a.work-item {
 
 .print-item:hover .print-img-wrap img,
 .print-item.is-active .print-img-wrap img {
-  transform: scale(1.06);
+  transform: scale(1.25);
 }
 
 .print-caption {
