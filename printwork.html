@@ -33,51 +33,38 @@
 
   <div class="project-divider"></div>
 
-  <section class="project-section" id="social-content" style="padding-top: 64px; padding-bottom: 64px;">
-  <div class="carousel">
-    <button class="carousel-btn carousel-btn--prev" aria-label="Previous">&#8592;</button>
-    <div class="carousel-track-wrapper">
-      <div class="carousel-track">
-        <div class="carousel-slide">
-          <img src="images/secretgardens.png" alt="Secret Gardens Dinner Party Invite" />
-          <p class="carousel-caption">Secret Gardens — dinner party invitation</p>
-        </div>
-        <div class="carousel-slide">
-          <img src="images/menuMock.png" alt="Menu & Name card" />
-          <p class="carousel-caption">Secret Gardens — custom menu, name cards & welcome card</p>
-        </div>
-        <div class="carousel-slide">
-          <img src="images/gardenparty.png" alt="Garden Party Poster" />
-          <p class="carousel-caption">Garden party event poster</p>
-        </div>
-        <div class="carousel-slide">
-          <img src="images/JointMock.png" alt="Bay to Breakers Poster and Social" />
-          <p class="carousel-caption">Bay to Breakers — poster & social media assets</p>
-        </div>
-        <div class="carousel-slide">
-          <img src="images/packagingmock.png" alt="Packaging for Zamboni Ice Cube Mold" />
-          <p class="carousel-caption">Zamboni Ice Cube Mold Packagaing Design</p>
-        </div>
-        <div class="carousel-slide">
-          <img src="images/loxmock.jpg" alt="Lox Packaging WildType Food" />
-          <p class="carousel-caption">Lox Packagaing For WildType Foods</p>
-        </div>
+  <section class="project-section" id="print-grid-section" style="padding-top: 64px; padding-bottom: 64px;">
+    <div class="print-grid">
+      <div class="print-item">
+        <img src="images/secretgardens.png" alt="Secret Gardens Dinner Party Invite" />
+        <p class="print-caption">Secret Gardens — dinner party invitation</p>
+      </div>
+      <div class="print-item">
+        <img src="images/menuMock.png" alt="Menu & Name card" />
+        <p class="print-caption">Secret Gardens — custom menu, name cards & welcome card</p>
+      </div>
+      <div class="print-item">
+        <img src="images/gardenparty.png" alt="Garden Party Poster" />
+        <p class="print-caption">Garden party event poster</p>
+      </div>
+      <div class="print-item">
+        <img src="images/JointMock.png" alt="Bay to Breakers Poster and Social" />
+        <p class="print-caption">Bay to Breakers — poster & social media assets</p>
+      </div>
+      <div class="print-item">
+        <img src="images/packagingmock.png" alt="Packaging for Zamboni Ice Cube Mold" />
+        <p class="print-caption">Zamboni Ice Cube Mold Packagaing Design</p>
+      </div>
+      <div class="print-item">
+        <img src="images/loxmock.jpg" alt="Lox Packaging WildType Food" />
+        <p class="print-caption">Lox Packagaing For WildType Foods</p>
+      </div>
+      <div class="print-item">
+        <img src="images/coaster.png" alt="Custom Coasters" />
+        <p class="print-caption">Custom Coasters</p>
       </div>
     </div>
-    <button class="carousel-btn carousel-btn--next" aria-label="Next">&#8594;</button>
-
-    <div class="carousel-dots">
-      <button class="carousel-dot is-active" aria-label="Slide 1"></button>
-      <button class="carousel-dot" aria-label="Slide 2"></button>
-      <button class="carousel-dot" aria-label="Slide 3"></button>
-      <button class="carousel-dot" aria-label="Slide 4"></button>
-      <button class="carousel-dot" aria-label="Slide 5"></button>
-      <button class="carousel-dot" aria-label="Slide 6"></button>
-      
-      
-    </div>
-  </div>
-</section>
+  </section>
 
   <!-- BACK LINK -->
   <div class="project-back">
@@ -89,30 +76,13 @@
 
 
 <script>
-  // ── Carousel ──────────────────────────────────
-  const track   = document.querySelector('.carousel-track');
-  const slides  = document.querySelectorAll('.carousel-slide');
-  const dots    = document.querySelectorAll('.carousel-dot');
-  const prevBtn = document.querySelector('.carousel-btn--prev');
-  const nextBtn = document.querySelector('.carousel-btn--next');
-  let current   = 0;
-
-  function goTo(index) {
-    current = (index + slides.length) % slides.length;
-    track.style.transform = `translateX(-${current * 100}%)`;
-    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
-  }
-
-  prevBtn.addEventListener('click', () => goTo(current - 1));
-  nextBtn.addEventListener('click', () => goTo(current + 1));
-  dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
-
-  // Swipe support for mobile
-  let startX = 0;
-  track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-  track.addEventListener('touchend', e => {
-    const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) goTo(diff > 0 ? current + 1 : current - 1);
+  /* ── Print grid — tap to toggle magnify on touch devices ── */
+  document.querySelectorAll('.print-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const isActive = item.classList.contains('is-active');
+      document.querySelectorAll('.print-item').forEach(i => i.classList.remove('is-active'));
+      if (!isActive) item.classList.add('is-active');
+    });
   });
 </script>
 
