@@ -1357,18 +1357,16 @@ a.work-item {
 
 /* ── Print Grid ─────────────────────────────────────────── */
 .print-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 32px;
-  align-items: start;
+  align-items: flex-start;
 }
 
-.print-item {
-  position: relative;
-}
-
-.print-item:last-child {
-  grid-column: 2;
+.print-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .print-img-wrap {
@@ -1396,10 +1394,7 @@ a.work-item {
 
 @media (max-width: 600px) {
   .print-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 40px;
-  }
-  .print-item:last-child {
-    grid-column: 1;
   }
 }
